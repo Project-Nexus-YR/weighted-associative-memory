@@ -6,7 +6,7 @@ Generated on 2026-08-13 with:
 python3 -m pytest -q --junitxml=results/pytest.xml
 ```
 
-Result: **22 passed, 0 failed, 0 skipped**.
+Result: **25 passed, 0 failed, 0 skipped**.
 
 The complete machine-readable report is in [`pytest.xml`](pytest.xml).
 
@@ -21,3 +21,5 @@ See [`report.md`](report.md) for the data-derived verdict and `plots/` for the f
 The falsification phase is in [`diagnostics/context_diagnostics.md`](diagnostics/context_diagnostics.md). The original benchmark artifacts remain at the top level; the rerun after diagnostic changes is preserved separately in [`benchmark_after_diagnostics/`](benchmark_after_diagnostics/).
 
 The lead-time experiment is in [`horizon_analysis/report.md`](horizon_analysis/report.md), with separate oracle/WAM horizon, timeliness, compute-gap, DRAM, bandwidth, and failure-breakdown artifacts.
+
+The hardware-realism phase is in [`hardware_feasibility/report.md`](hardware_feasibility/report.md). It preserves the earlier result directories and adds explicit predictor latency/throughput, overlap, pipelining, queue/port pressure, bounded hashed storage, counter quantization, update batching, signature compression, prediction caching, fallback/candidate cost, energy proxy, tolerance, and feasibility-matrix artifacts.

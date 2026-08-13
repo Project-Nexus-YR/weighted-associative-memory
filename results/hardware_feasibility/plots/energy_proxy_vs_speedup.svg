@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="400.0" y="25" text-anchor="middle" font-family="sans-serif" font-size="16">Energy proxy vs speedup</text>
+<line x1="80" y1="400" x2="730" y2="400" stroke="black"/>
+<line x1="80" y1="50" x2="80" y2="400" stroke="black"/>
+<polyline points="395.9,50.0" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="70" font-family="sans-serif" font-size="12" fill="#1f77b4">CAM-like</text>
+<polyline points="462.7,151.0" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="90" font-family="sans-serif" font-size="12" fill="#d62728">HashedContext</text>
+<polyline points="730.0,400.0" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="110" font-family="sans-serif" font-size="12" fill="#2ca02c">IdealWAM</text>
+<polyline points="730.0,400.0" fill="none" stroke="#9467bd" stroke-width="2"/>
+<text x="745" y="130" font-family="sans-serif" font-size="12" fill="#9467bd">Oracle</text>
+<polyline points="417.4,167.4" fill="none" stroke="#ff7f0e" stroke-width="2"/>
+<text x="745" y="150" font-family="sans-serif" font-size="12" fill="#ff7f0e">ParallelTrie</text>
+<polyline points="125.0,209.1" fill="none" stroke="#17becf" stroke-width="2"/>
+<text x="745" y="170" font-family="sans-serif" font-size="12" fill="#17becf">PipelinedTrie</text>
+<polyline points="80.0,167.4" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="190" font-family="sans-serif" font-size="12" fill="#1f77b4">SerialTrie</text>
+<text x="405.0" y="485" text-anchor="middle" font-family="sans-serif" font-size="12">Speedup</text>
+<text x="15" y="225.0" transform="rotate(-90 15 225.0)" text-anchor="middle" font-family="sans-serif" font-size="12">Energy / baseline</text>
+</svg>

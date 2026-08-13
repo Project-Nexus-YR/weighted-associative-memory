@@ -128,6 +128,12 @@ The generated report is deliberately allowed to conclude that WAM loses. In part
 
 `python -m wam.horizon_analysis` tests whether accurate higher-order predictions arrive early enough to overlap memory latency. It compares direct horizon WAM, recursive traversal, direct Markov-N, and perfect `Oracle-H1` through `Oracle-H32` configurations under the same hierarchy. It records lead time, slack, late/partial/fully hidden misses, compute gaps, DRAM latency, bandwidth limits, failure buckets, and long higher-order accuracy at 100K and 1M accesses. Results are isolated in `results/horizon_analysis/` so earlier evidence remains reproducible.
 
+## Hardware-feasibility analysis
+
+`python -m wam.hardware_feasibility` evaluates whether the horizon benefit survives an explicit predictor cost model. It separates lookup latency from issue interval, supports serial and overlapped/pipelined lookup, queues and port pressure, deferred/batched updates, fixed hash tables, integer counters, context signatures, prediction-result caches, fallback/candidate-selection costs, and a normalized energy proxy. The default run prioritizes `DirectWAM-H16` and repeats key sweeps at H8/H32 in the latency table.
+
+The experiment writes a new `results/hardware_feasibility/` directory containing latency, throughput, overlap, architecture, storage-budget, counter-width, hash-collision, update, batching, energy, tolerance, and microarchitecture CSVs, a feasibility matrix, plots, `config.json`, and a data-derived `report.md`. `IdealWAM` is a zero-cost direct-WAM upper bound; `Oracle` is reported separately and is not treated as implementable hardware. Hash-table replacement is approximated by deterministic bucket aliasing, and energy values are normalized comparative units rather than silicon estimates.
+
 ## Context-sensitive experiment
 
 The important motivating trace is:

@@ -1,0 +1,113 @@
+{
+  "length": 4800,
+  "workloads": {
+    "LongHigherOrder": 4800,
+    "Contextual": 4800,
+    "LongerDependency": 4800,
+    "HigherOrderAmbiguous": 4800
+  },
+  "latencies": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "issue_intervals": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "overlaps": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "budgets": [
+    1024,
+    2048,
+    4096,
+    8192,
+    16384,
+    32768,
+    65536,
+    131072,
+    262144
+  ],
+  "table_sizes": [
+    256,
+    512,
+    1024,
+    2048,
+    4096,
+    8192,
+    16384
+  ],
+  "counter_widths": [
+    2,
+    4,
+    8,
+    12
+  ],
+  "update_latencies": [
+    0,
+    1,
+    2,
+    4,
+    8
+  ],
+  "batch_sizes": [
+    1,
+    4,
+    8,
+    16,
+    32,
+    64
+  ],
+  "signature_bits": [
+    64,
+    32,
+    16,
+    12,
+    8
+  ],
+  "simulator": {
+    "hierarchy": {
+      "l1_capacity": 64,
+      "l2_capacity": 256,
+      "l3_capacity": 1024,
+      "l1_latency": 4,
+      "l2_latency": 12,
+      "l3_latency": 40,
+      "dram_latency": 150,
+      "cache_line_size": 64
+    },
+    "prefetch_issue_cost": 1,
+    "prefetch_destination": "L1",
+    "address_bytes": 8,
+    "top_k": 1,
+    "max_outstanding_prefetches": 8,
+    "compute_cycles_between_accesses": 0,
+    "predictor_lookup_latency": null,
+    "predictor_issue_interval": 1,
+    "predictor_overlap_cycles": 0,
+    "predictor_parallel": false,
+    "predictor_update_latency": 0,
+    "predictor_update_interval": 1,
+    "deferred_updates": false,
+    "update_batch_size": 1,
+    "predictor_queue_depth": 16,
+    "read_ports": 1,
+    "write_ports": 1
+  }
+}

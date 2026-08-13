@@ -197,6 +197,17 @@ class HorizonConfig:
     top_k: int = 3
     max_outstanding_prefetches: int = 8
     compute_cycles_between_accesses: int = 0
+    predictor_lookup_latency: int | None = None
+    predictor_issue_interval: int = 1
+    predictor_overlap_cycles: int = 0
+    predictor_parallel: bool = False
+    predictor_update_latency: int | None = None
+    predictor_update_interval: int = 1
+    deferred_updates: bool = False
+    update_batch_size: int = 1
+    predictor_queue_depth: int = 16
+    read_ports: int = 1
+    write_ports: int = 1
 
 
 @dataclass
@@ -236,6 +247,14 @@ class HorizonMetrics:
     lateness_cost: int = 0
     bandwidth_cost: int = 0
     pollution_cost: int = 0
+    predictor_queue_stalls: int = 0
+    predictor_queue_wait: int = 0
+    max_predictor_queue_wait: int = 0
+    update_queue_stalls: int = 0
+    port_stalls: int = 0
+    dropped_predictions: int = 0
+    update_count: int = 0
+    energy_proxy: float = 0.0
 
     @property
     def top1_accuracy(self) -> float:
@@ -273,6 +292,10 @@ class HorizonMetrics:
     def bandwidth_utilization(self) -> float:
         return self.prefetches_issued / max(1, self.prefetches_issued + self.dropped_prefetches)
 
+    @property
+    def average_predictor_queue_wait(self) -> float:
+        return self.predictor_queue_wait / self.predictor_queue_stalls if self.predictor_queue_stalls else 0.0
+
 
 @dataclass
 class HorizonResult:
@@ -306,6 +329,9 @@ def simulate_horizon(trace: Iterable[int], predictor, horizon: int, config: Hori
     prefetched: dict[int, _Request] = {}
     demand_lines: set[int] = set()
     polluted: set[int] = set()
+    next_lookup_issue = 0
+    next_update_issue = 0
+    buffered_updates = 0
 
     def mark_evictions(evicted: Iterable[int]) -> None:
         for line in evicted:
@@ -395,14 +421,48 @@ def simulate_horizon(trace: Iterable[int], predictor, horizon: int, config: Hori
             metrics.unhidden_misses += 1
         demand_lines.add(line)
         context.append(line)
-        metrics.predictor_overhead += getattr(predictor, "update_cost", 0)
-        cycle += getattr(predictor, "update_cost", 0)
+        update_latency = config.predictor_update_latency if config.predictor_update_latency is not None else getattr(predictor, "update_cost", 0)
+        if not config.deferred_updates:
+            update_start = cycle
+            if update_start < next_update_issue:
+                wait = next_update_issue - update_start
+                metrics.update_queue_stalls += 1
+                metrics.port_stalls += wait if config.write_ports < 1 else 0
+                cycle += wait
+                update_start = cycle
+            cycle += update_latency
+            next_update_issue = update_start + max(1, config.predictor_update_interval)
+            metrics.predictor_overhead += update_latency
+            metrics.update_count += 1
+        else:
+            buffered_updates += 1
+            metrics.update_count += 1
+            if buffered_updates >= max(1, config.update_batch_size):
+                cycle += update_latency
+                metrics.predictor_overhead += update_latency
+                buffered_updates = 0
 
         # The current address is now part of the available history. Direct,
         # recursive, and oracle predictions target index+h from this point.
         predictions = predictions_for(index)
-        metrics.predictor_overhead += getattr(predictor, "lookup_cost", 0)
-        cycle += getattr(predictor, "lookup_cost", 0)
+        lookup_latency = config.predictor_lookup_latency if config.predictor_lookup_latency is not None else getattr(predictor, "lookup_cost", 0)
+        pipeline_occupancy = max(1, (lookup_latency + max(1, config.predictor_issue_interval) - 1) // max(1, config.predictor_issue_interval))
+        if config.predictor_parallel and pipeline_occupancy > max(1, config.predictor_queue_depth):
+            metrics.dropped_predictions += 1
+            predictions = []
+        lookup_start = cycle
+        if lookup_start < next_lookup_issue:
+            wait = next_lookup_issue - lookup_start
+            metrics.predictor_queue_stalls += 1
+            metrics.predictor_queue_wait += wait
+            metrics.max_predictor_queue_wait = max(metrics.max_predictor_queue_wait, wait)
+            cycle += wait
+            lookup_start = cycle
+        effective_lookup = max(0, lookup_latency - config.predictor_overlap_cycles) if config.predictor_parallel else lookup_latency
+        cycle += effective_lookup
+        next_lookup_issue = lookup_start + max(1, config.predictor_issue_interval)
+        metrics.predictor_overhead += effective_lookup
+        metrics.energy_proxy += 1.0 + 0.1 * getattr(predictor, "context_depth", 1)
         valid_predictions = []
         for prediction in predictions:
             target_index = index + prediction.horizon
@@ -435,7 +495,15 @@ def simulate_horizon(trace: Iterable[int], predictor, horizon: int, config: Hori
                 metrics.bandwidth_bytes += config.address_bytes
                 metrics.prefetch_overhead += config.prefetch_issue_cost
                 cycle += config.prefetch_issue_cost
+        read_port_stall = max(0, len(valid_predictions) - max(1, config.read_ports))
+        metrics.port_stalls += read_port_stall
+        cycle += read_port_stall
         cycle += config.compute_cycles_between_accesses
+
+    if config.deferred_updates and buffered_updates:
+        update_latency = config.predictor_update_latency if config.predictor_update_latency is not None else getattr(predictor, "update_cost", 0)
+        cycle += update_latency
+        metrics.predictor_overhead += update_latency
 
     metrics.unused_prefetches += len(pending) + len(prefetched)
     metrics.cycles = cycle

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="400.0" y="25" text-anchor="middle" font-family="sans-serif" font-size="16">Accuracy vs predictor storage</text>
+<line x1="80" y1="400" x2="730" y2="400" stroke="black"/>
+<line x1="80" y1="50" x2="80" y2="400" stroke="black"/>
+<polyline points="80.0,400.0 82.5,302.1 87.6,224.4 97.8,119.4 118.2,105.8 159.0,77.9 240.6,63.6 403.7,57.1 730.0,57.1" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="70" font-family="sans-serif" font-size="12" fill="#1f77b4">BudgetedWAM</text>
+<polyline points="80.0,50.0 82.5,50.0 87.6,50.0 97.8,50.0 118.2,50.0 159.0,50.0 240.6,50.0 403.7,50.0 730.0,50.0" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="90" font-family="sans-serif" font-size="12" fill="#d62728">Markov-N</text>
+<polyline points="80.0,50.0 82.5,50.0 87.6,50.0 97.8,50.0 118.2,50.0 159.0,50.0 240.6,50.0 403.7,50.0 730.0,50.0" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="110" font-family="sans-serif" font-size="12" fill="#2ca02c">Stride</text>
+<text x="405.0" y="485" text-anchor="middle" font-family="sans-serif" font-size="12">Budget bytes</text>
+<text x="15" y="225.0" transform="rotate(-90 15 225.0)" text-anchor="middle" font-family="sans-serif" font-size="12">Accuracy</text>
+</svg>
