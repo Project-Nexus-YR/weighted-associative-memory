@@ -1,0 +1,39 @@
+{
+  "simulator": {
+    "hierarchy": {
+      "l1_capacity": 64,
+      "l2_capacity": 256,
+      "l3_capacity": 1024,
+      "l1_latency": 4,
+      "l2_latency": 12,
+      "l3_latency": 40,
+      "dram_latency": 150,
+      "cache_line_size": 64
+    },
+    "prefetch_issue_cost": 1,
+    "prefetch_cost": null,
+    "prefetch_destination": "L1",
+    "address_bytes": 8,
+    "top_k": 3,
+    "max_outstanding_prefetches": 8,
+    "predictor_lookup_cost": null,
+    "predictor_update_cost": null
+  },
+  "long_lengths": [
+    1000,
+    10000,
+    100000,
+    1000000
+  ],
+  "repetitions": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "trace": null
+}

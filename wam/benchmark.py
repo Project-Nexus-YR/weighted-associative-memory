@@ -125,6 +125,11 @@ def result_row(
         "prefetch_overhead": m.prefetch_overhead,
         "latency_saved_by_useful_prefetches": m.latency_saved_by_useful_prefetches,
         "net_latency_benefit": m.net_latency_benefit,
+        "context_reuse_ratio": m.context_reuse_ratio,
+        "fallback_count": m.fallback_count,
+        "unseen_context_count": m.unseen_context_count,
+        "mean_context_observations": m.mean_context_observations,
+        "mean_context_entropy": m.mean_context_entropy,
         "entries": storage.get("entries", 0),
         "nodes": storage.get("nodes", 0),
         "edges": storage.get("edges", 0),
@@ -188,7 +193,7 @@ def summarize(rows: list[dict[str, object]]) -> list[dict[str, object]]:
     fields = [
         "speedup_over_none", "speedup_over_nextline", "speedup_over_stride", "speedup_over_markov",
         "top1_accuracy", "topk_accuracy", "average_memory_latency", "average_access_latency",
-        "prefetch_precision", "prefetch_coverage", "estimated_bytes", "bytes_per_transition", "predictor_lookup_overhead",
+        "prefetch_precision", "prefetch_coverage", "estimated_bytes", "bytes_per_transition", "context_reuse_ratio", "mean_context_observations", "mean_context_entropy", "predictor_lookup_overhead",
     ]
     result: list[dict[str, object]] = []
     for (workload, predictor), group in sorted(groups.items()):

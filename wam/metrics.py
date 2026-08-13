@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -35,6 +35,14 @@ class SimulationMetrics:
     latency_saved_by_useful_prefetches: int = 0
     incorrect_prefetch_cost: int = 0
     baseline_dram_accesses: int = 0
+    context_lookups: int = 0
+    exact_context_hits: int = 0
+    fallback_count: int = 0
+    unseen_context_count: int = 0
+    matched_depth_histogram: dict[int, int] = field(default_factory=dict)
+    context_observation_sum: int = 0
+    context_entropy_sum: float = 0.0
+    context_entropy_observations: int = 0
 
     @property
     def l1_hit_rate(self) -> float:
@@ -84,6 +92,35 @@ class SimulationMetrics:
     @property
     def net_latency_benefit(self) -> int:
         return self.latency_saved_by_useful_prefetches - self.incorrect_prefetch_cost
+
+    @property
+    def context_reuse_ratio(self) -> float:
+        return self.exact_context_hits / self.context_lookups if self.context_lookups else 0.0
+
+    @property
+    def mean_context_observations(self) -> float:
+        return self.context_observation_sum / self.context_lookups if self.context_lookups else 0.0
+
+    @property
+    def mean_context_entropy(self) -> float:
+        return self.context_entropy_sum / self.context_entropy_observations if self.context_entropy_observations else 0.0
+
+    def record_context_lookup(self, diagnostics: dict[str, float | int | bool | None]) -> None:
+        self.context_lookups += 1
+        requested = int(diagnostics.get("requested_available_depth", 0) or 0)
+        matched = int(diagnostics.get("matched_depth", 0) or 0)
+        self.matched_depth_histogram[matched] = self.matched_depth_histogram.get(matched, 0) + 1
+        if matched and matched == requested:
+            self.exact_context_hits += 1
+        if bool(diagnostics.get("fallback")):
+            self.fallback_count += 1
+        if bool(diagnostics.get("unseen")):
+            self.unseen_context_count += 1
+        self.context_observation_sum += int(diagnostics.get("observations", 0) or 0)
+        entropy = diagnostics.get("entropy")
+        if entropy is not None:
+            self.context_entropy_sum += float(entropy)
+            self.context_entropy_observations += 1
 
     def speedup_vs(self, baseline_cycles: int) -> float:
         return baseline_cycles / self.cycles if self.cycles else 0.0

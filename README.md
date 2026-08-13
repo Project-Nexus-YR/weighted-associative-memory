@@ -113,11 +113,16 @@ Use a different trace length or a plain-text trace file:
 ```bash
 python -m wam.benchmark --length 2000 --trials 10
 python -m wam.benchmark --trace path/to/trace.txt
+python -m wam.diagnostics --output results/diagnostics
 ```
 
 Trace files contain one integer or hexadecimal byte address per line. Blank lines and `#` comments are accepted. `wam.traces.iter_addresses` is streaming, so large files need not be loaded unless an experiment explicitly requires a chronological split. Traces can be generated with Valgrind/Lackey, Intel Pin, DynamoRIO, or `perf` and converted to this one-address-per-line format; those tools are not test dependencies.
 
 The generated report is deliberately allowed to conclude that WAM loses. In particular, sequential and constant-stride streams should favor conventional prefetchers, random streams should punish speculative state, and deeper contexts should pay storage and lookup costs unless the workload contains repeatable higher-order structure. The report identifies WAM wins/losses, the best depth and threshold, warm-up, storage, maximum speedup, geometric-mean speedup, break-even accuracy, and the next recommended experiment.
+
+## Falsification diagnostics
+
+`python -m wam.diagnostics` preserves the primary benchmark and writes a separate higher-order diagnostic set. It verifies depth-2 and depth-4 discrimination with regression tests, instruments exact/fallback/unseen context matches, measures context support and reuse, sweeps repetition density and trace lengths through one million accesses, compares WAM against flat Markov-N tables, and evaluates pruning, support-based confidence, entropy gating, and empirical context-oracle accuracy. Its `context_diagnostics.md` is a diagnostic conclusion, not an optimized headline result.
 
 ## Context-sensitive experiment
 

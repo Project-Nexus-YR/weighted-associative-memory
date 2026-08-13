@@ -17,3 +17,5 @@ python3 -m wam.benchmark --output results --length 360 --trials 10
 ```
 
 See [`report.md`](report.md) for the data-derived verdict and `plots/` for the figures.
+
+The falsification phase is in [`diagnostics/context_diagnostics.md`](diagnostics/context_diagnostics.md). The original benchmark artifacts remain at the top level; the rerun after diagnostic changes is preserved separately in [`benchmark_after_diagnostics/`](benchmark_after_diagnostics/).

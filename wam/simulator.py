@@ -120,6 +120,7 @@ def simulate(
         lookup_cost = config.predictor_lookup_cost if config.predictor_lookup_cost is not None else predictor.lookup_cost
         metrics.predictor_lookup_overhead += lookup_cost
         cycle += lookup_cost
+        metrics.record_context_lookup(predictor.lookup_diagnostics(context))
         predictions = predictor.predict(context, config.top_k)
         if not enable_prefetch:
             return predictions

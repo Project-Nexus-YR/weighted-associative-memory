@@ -37,6 +37,26 @@ def longer_dependency(repeats: int = 100) -> list[int]:
     return [address for _ in range(repeats) for address in (0, 1, 2, 3, 10, 4, 1, 2, 3, 11)]
 
 
+def higher_order_ambiguous(context_count: int = 100, repeats: int = 32) -> list[int]:
+    """Many ``prefix,B,C,target`` families; B/C alone are ambiguous."""
+    trace: list[int] = []
+    for _ in range(repeats):
+        for family in range(context_count):
+            prefix = family * 10 + 10
+            trace.extend((prefix, 1, 2, family * 10 + 3))
+    return trace
+
+
+def higher_order_depth4(context_count: int = 100, repeats: int = 32) -> list[int]:
+    """Many ``prefix,P,Q,R,target`` families; depth 4 identifies the branch."""
+    trace: list[int] = []
+    for _ in range(repeats):
+        for family in range(context_count):
+            prefix = family * 10 + 10
+            trace.extend((prefix, 1, 2, 3, family * 10 + 4))
+    return trace
+
+
 def probabilistic_branching(length: int = 600, probability: float = 0.75, seed: int = 0) -> list[int]:
     """A-B-C with ``probability`` and A-B-D otherwise."""
     rng = random.Random(seed)
