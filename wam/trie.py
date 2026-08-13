@@ -110,7 +110,14 @@ class WeightedTrie:
         edges = sum(len(node.children) for node in nodes)
         # Each edge stores an address, counter, weight, and child index/pointer.
         estimated_bytes = edges * (address_bytes + weight_bytes + counter_bytes + pointer_bytes)
-        return {"nodes": len(nodes), "edges": edges, "estimated_bytes": estimated_bytes}
+        return {
+            "entries": edges,
+            "nodes": len(nodes),
+            "edges": edges,
+            "counters": edges,
+            "weights": edges,
+            "estimated_bytes": estimated_bytes,
+        }
 
     def ascii(self, max_depth: int = 4) -> str:
         """Render a small trie for inspection and README-like demos."""

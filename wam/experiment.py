@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .predictor import LastTransitionPredictor, NextLinePredictor, WeightedTriePredictor
 from .simulator import SimulatorConfig, SimulationResult, simulate
-from .workloads import all_workloads
+from .workloads import all_workloads, to_byte_addresses
 
 
 def _split(trace: list[int], fraction: float = 0.6) -> tuple[list[int], list[int]]:
@@ -29,7 +29,7 @@ def run_workload(name: str, trace: list[int], config: SimulatorConfig | None = N
     for label, predictor, enable_prefetch in predictors:
         if predictor is not None:
             predictor.fit(training)
-        result = simulate(test, predictor, config, enable_prefetch=enable_prefetch)
+        result = simulate(to_byte_addresses(test, config.cache_line_size), predictor, config, enable_prefetch=enable_prefetch, initial_context=training[-getattr(predictor, "context_depth", 1) :] if predictor is not None else ())
         if baseline is None:
             baseline = result
         metrics = result.metrics
@@ -56,18 +56,19 @@ def context_depth_rows(workloads: dict[str, list[int]], depths: tuple[int, ...] 
         training, test = _split(trace)
         for depth in depths:
             predictor = WeightedTriePredictor(context_depth=depth, threshold=0.05).fit(training)
-            result = simulate(test, predictor, config)
+            result = simulate(to_byte_addresses(test, config.cache_line_size), predictor, config, initial_context=training[-depth:])
             rows.append({"workload": workload, "depth": depth, "accuracy": result.metrics.top1_accuracy, "latency": result.metrics.average_access_latency, "storage_bytes": result.predictor_storage["estimated_bytes"]})
     return rows
 
 
 def threshold_rows(workloads: dict[str, list[int]], thresholds: tuple[float, ...] = (0.0, 0.25, 0.5, 0.75, 0.9)) -> list[dict]:
     rows: list[dict] = []
+    config = SimulatorConfig()
     for workload, trace in workloads.items():
         training, test = _split(trace)
         for threshold in thresholds:
             predictor = WeightedTriePredictor(context_depth=2, threshold=threshold).fit(training)
-            result = simulate(test, predictor)
+            result = simulate(to_byte_addresses(test, config.cache_line_size), predictor, config, initial_context=training[-2:])
             rows.append({"workload": workload, "threshold": threshold, "latency": result.metrics.average_access_latency})
     return rows
 

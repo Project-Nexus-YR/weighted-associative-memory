@@ -1,4 +1,4 @@
-"""Run traces through the hierarchy with optional predictive prefetching."""
+"""Replay traces through a hierarchy with realistic-enough prefetch timing."""
 
 from __future__ import annotations
 
@@ -13,10 +13,23 @@ from .predictor import Prediction, Predictor
 @dataclass(frozen=True)
 class SimulatorConfig:
     hierarchy: HierarchyConfig = field(default_factory=HierarchyConfig)
-    prefetch_cost: int = 8
+    prefetch_issue_cost: int = 1
+    # Backward-compatible alias used by the original MVP API.
+    prefetch_cost: int | None = None
     prefetch_destination: str = "L1"
     address_bytes: int = 8
     top_k: int = 3
+    max_outstanding_prefetches: int = 8
+    predictor_lookup_cost: int | None = None
+    predictor_update_cost: int | None = None
+
+    @property
+    def cache_line_size(self) -> int:
+        return self.hierarchy.cache_line_size
+
+    @property
+    def effective_prefetch_issue_cost(self) -> int:
+        return self.prefetch_issue_cost if self.prefetch_cost is None else self.prefetch_cost
 
 
 @dataclass
@@ -34,75 +47,158 @@ class SimulationResult:
         return 1.0
 
 
-def simulate(trace: Iterable[int], predictor: Predictor | None = None, config: SimulatorConfig = SimulatorConfig(), enable_prefetch: bool = True) -> SimulationResult:
-    """Simulate a trace; predictions are issued immediately before each access."""
-    addresses = list(trace)
-    hierarchy = MemoryHierarchy(config.hierarchy)
-    metrics = SimulationMetrics()
-    baseline_hierarchy = MemoryHierarchy(config.hierarchy)
-    for address in addresses:
-        if baseline_hierarchy.access(address).level == "DRAM":
-            metrics.baseline_dram_accesses += 1
-    context: list[int] = []
-    pending_prefetches: set[int] = set()
-    predictor_name = predictor.name if predictor is not None else "None"
+@dataclass(frozen=True)
+class _OutstandingPrefetch:
+    line: int
+    ready_cycle: int
+    destination: str
 
-    for current in addresses:
-        predictions = predictor.predict(context, config.top_k) if predictor is not None else []
-        if predictions:
+
+def _mark_evictions(
+    evicted: Iterable[int],
+    prefetched_resident: set[int],
+    demand_resident: set[int],
+    polluted_lines: set[int],
+    metrics: SimulationMetrics,
+) -> None:
+    for line in evicted:
+        if line in prefetched_resident:
+            prefetched_resident.remove(line)
+            metrics.unused_prefetches += 1
+            polluted_lines.add(line)
+        elif line in demand_resident:
+            metrics.cache_evictions_caused_by_prefetching += 1
+            demand_resident.remove(line)
+
+
+def simulate(
+    trace: Iterable[int],
+    predictor: Predictor | None = None,
+    config: SimulatorConfig = SimulatorConfig(),
+    enable_prefetch: bool = True,
+    learning: bool = False,
+    initial_context: Iterable[int] | None = None,
+) -> SimulationResult:
+    """Replay raw byte addresses, while predictors see normalized line IDs.
+
+    Prefetches are outstanding requests. A demand arriving before a request's
+    ready cycle waits for the remaining time and is counted as late; a request
+    ready before demand is inserted into the configured cache destination.
+    """
+    raw_addresses = list(trace)
+    hierarchy = MemoryHierarchy(config.hierarchy)
+    lines = [hierarchy.normalize(address) for address in raw_addresses]
+    metrics = SimulationMetrics(total_accesses=0)
+    pending: dict[int, _OutstandingPrefetch] = {}
+    prefetched_resident: set[int] = set()
+    demand_resident: set[int] = set()
+    polluted_lines: set[int] = set()
+    context: list[int] = list(initial_context or [])[-getattr(predictor, "context_depth", 1) :]
+    cycle = 0
+    predictor_name = predictor.name if predictor is not None else "None"
+    predictor_storage = predictor.storage_stats() if predictor is not None else {"entries": 0, "nodes": 0, "edges": 0, "counters": 0, "weights": 0, "estimated_bytes": 0}
+
+    # The control is computed with the same line abstraction and caches.
+    baseline_hierarchy = MemoryHierarchy(config.hierarchy)
+    for line in lines:
+        if baseline_hierarchy.access(line).level == "DRAM":
+            metrics.baseline_dram_accesses += 1
+
+    def complete_ready() -> None:
+        ready = [request for request in pending.values() if request.ready_cycle <= cycle]
+        for request in ready:
+            pending.pop(request.line, None)
+            metrics.prefetches_completed += 1
+            evicted = hierarchy.insert_prefetch(request.line, request.destination)
+            prefetched_resident.add(request.line)
+            _mark_evictions(evicted, prefetched_resident, demand_resident, polluted_lines, metrics)
+
+    def prepare_predictions() -> list[Prediction]:
+        nonlocal cycle
+        if predictor is None:
+            return []
+        lookup_cost = config.predictor_lookup_cost if config.predictor_lookup_cost is not None else predictor.lookup_cost
+        metrics.predictor_lookup_overhead += lookup_cost
+        cycle += lookup_cost
+        predictions = predictor.predict(context, config.top_k)
+        if not enable_prefetch:
+            return predictions
+        for prediction in predictions:
+            metrics.prefetch_requests += 1
+            if prediction.address in pending or prediction.address in prefetched_resident or hierarchy.contains(prediction.address):
+                metrics.duplicate_prefetches += 1
+                continue
+            if len(pending) >= config.max_outstanding_prefetches:
+                metrics.dropped_prefetches += 1
+                continue
+            pending[prediction.address] = _OutstandingPrefetch(
+                prediction.address,
+                cycle + config.hierarchy.dram_latency,
+                config.prefetch_destination,
+            )
+            metrics.prefetches_issued += 1
+            metrics.bandwidth_bytes += config.address_bytes
+            metrics.prefetch_overhead += config.effective_prefetch_issue_cost
+            cycle += config.effective_prefetch_issue_cost
+        return predictions
+
+    predictions_for_current = prepare_predictions() if context else []
+
+    for index, line in enumerate(lines):
+        complete_ready()
+        if predictions_for_current:
             metrics.prediction_attempts += 1
-            if predictions[0].address == current:
+            if predictions_for_current[0].address == line:
                 metrics.top1_correct += 1
-            if any(prediction.address == current for prediction in predictions):
+            if any(prediction.address == line for prediction in predictions_for_current):
                 metrics.topk_correct += 1
             else:
                 metrics.incorrect_predictions += 1
 
-        if enable_prefetch and predictions:
-            for prediction in predictions:
-                if prediction.address in pending_prefetches or hierarchy.contains(prediction.address):
-                    metrics.duplicate_prefetches += 1
-                    continue
-                inserted, evicted = hierarchy.prefetch(prediction.address, config.prefetch_destination)
-                if inserted:
-                    metrics.prefetches_issued += 1
-                    metrics.bandwidth_bytes += config.address_bytes
-                    metrics.cycles += config.prefetch_cost
-                    pending_prefetches.add(prediction.address)
-                    if evicted is not None and evicted in pending_prefetches:
-                        pending_prefetches.remove(evicted)
-                        metrics.unused_prefetches += 1
-                        metrics.incorrect_prefetch_cost += config.prefetch_cost
+        wait_for_prefetch = 0
+        if line in pending:
+            request = pending[line]
+            wait_for_prefetch = max(0, request.ready_cycle - cycle)
+            if wait_for_prefetch:
+                metrics.late_prefetches += 1
+                cycle += wait_for_prefetch
+            complete_ready()
 
-        if current in pending_prefetches and not hierarchy.contains(current):
-            # It was evicted before use; this prediction consumed bandwidth but
-            # did not help the demand access.
-            pending_prefetches.remove(current)
-            metrics.unused_prefetches += 1
-            metrics.incorrect_prefetch_cost += config.prefetch_cost
-
-        result = hierarchy.access(current)
+        result = hierarchy.access(line)
         metrics.total_accesses += 1
-        metrics.cycles += result.latency
+        metrics.raw_memory_cycles += result.latency
+        cycle += result.latency
         if result.level == "L1":
             metrics.l1_hits += 1
         elif result.level == "L2":
             metrics.l2_hits += 1
+        elif result.level == "L3":
+            metrics.l3_hits += 1
         else:
             metrics.dram_accesses += 1
+        _mark_evictions(result.evicted, prefetched_resident, demand_resident, polluted_lines, metrics)
+        if line in polluted_lines and result.level == "DRAM":
+            metrics.pollution_misses += 1
+            polluted_lines.remove(line)
+        demand_resident.add(line)
 
-        if result.evicted_by_fill is not None and result.evicted_by_fill in pending_prefetches:
-            pending_prefetches.remove(result.evicted_by_fill)
-            metrics.unused_prefetches += 1
-            metrics.incorrect_prefetch_cost += config.prefetch_cost
-
-        if current in pending_prefetches:
-            pending_prefetches.remove(current)
+        if line in prefetched_resident:
+            prefetched_resident.remove(line)
             metrics.useful_prefetches += 1
-            metrics.latency_saved_by_useful_prefetches += max(0, config.hierarchy.dram_latency - result.latency)
-        context.append(current)
+            demand_latency = result.latency + wait_for_prefetch
+            metrics.latency_saved_by_useful_prefetches += max(0, config.hierarchy.dram_latency - demand_latency)
 
-    metrics.unused_prefetches += len(pending_prefetches)
-    metrics.incorrect_prefetch_cost += len(pending_prefetches) * config.prefetch_cost
-    metrics.cache_evictions_caused_by_prefetching = hierarchy.prefetch_evictions
-    return SimulationResult(metrics, predictor_name, predictor.storage_stats() if predictor else {"nodes": 0, "edges": 0, "estimated_bytes": 0})
+        if predictor is not None and learning:
+            update_cost = config.predictor_update_cost if config.predictor_update_cost is not None else predictor.update_cost
+            predictor.observe(line)
+            metrics.predictor_update_overhead += update_cost
+            cycle += update_cost
+        context.append(line)
+        if index + 1 < len(lines):
+            predictions_for_current = prepare_predictions()
+
+    # Any request/line that never serves demand is speculative waste.
+    metrics.unused_prefetches += len(pending) + len(prefetched_resident)
+    metrics.incorrect_prefetch_cost += (len(pending) + len(prefetched_resident)) * config.effective_prefetch_issue_cost
+    metrics.cycles = cycle
+    return SimulationResult(metrics, predictor_name, predictor_storage)

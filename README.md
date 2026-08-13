@@ -54,9 +54,10 @@ python -m pip install -e '.[dev]'
 python -m pytest
 python -m wam.experiment
 python -m wam.experiment --length 2000 --plot-dir artifacts/plots
+python -m wam.benchmark
 ```
 
-The default hierarchy is deliberately simple:
+The original MVP experiment has a deliberately simple hierarchy:
 
 ```text
 L1:   64 entries, 4 cycles
@@ -64,7 +65,7 @@ L2:  256 entries, 12 cycles
 DRAM: unlimited, 100 cycles
 ```
 
-Prefetching costs 8 cycles and 8 bandwidth bytes per non-duplicate address by default. Prefetches are inserted into L1 by default; use the Python API to select L2.
+The original MVP simulator charges 1 cycle to issue a prefetch and 8 bandwidth bytes per non-duplicate address by default. The research simulator additionally models DRAM completion latency, outstanding-request limits, late arrivals, and configurable L1/L2/L3 destinations.
 
 ## Baselines and metrics
 
@@ -83,6 +84,40 @@ net latency benefit = latency saved by useful prefetches
 ```
 
 The predictive system can therefore lose: low-confidence predictions consume cycles and cache capacity, and may evict useful lines.
+
+## Comparative research benchmark
+
+`python -m wam.benchmark` runs the serious comparative experiment. It replays identical traces against a no-prefetch L1/L2/L3/DRAM control, next-line prefetching, a confidence-based stride prefetcher, first-order Markov prediction, and weighted trie depths 1, 2, 3, 4, and 8.
+
+The benchmark uses a chronological 70/30 split by default. Predictors are trained only on the first portion and frozen during evaluation. The same simulator also supports online learning (`learning=True`) and emits a learning curve. No trace shuffling is performed.
+
+The research hierarchy defaults to 64-byte cache lines and configurable 4/12/40/150-cycle L1/L2/L3/DRAM parameters. Prefetches are outstanding requests rather than instantaneous cache inserts: they have a completion time, can arrive late, consume bounded outstanding-request slots, and can cause cache pollution. Predictor lookup/update cycles are included in effective cycles.
+
+The command writes:
+
+```text
+results/
+├── summary.csv                 # mean/std across trials
+├── detailed_results.csv        # one row per workload/system/trial
+├── sweep.csv                   # depth, threshold, EMA, top-K, destination sweeps
+├── ablation.csv                # depth/threshold/EMA/no-prefetch ablations
+├── learning_curve.csv          # online accuracy/latency over prefixes
+├── break_even.csv              # accuracy vs speedup at two DRAM latencies
+├── config.json
+├── report.md                   # data-derived verdict and limitations
+└── plots/                      # 11 matplotlib figures
+```
+
+Use a different trace length or a plain-text trace file:
+
+```bash
+python -m wam.benchmark --length 2000 --trials 10
+python -m wam.benchmark --trace path/to/trace.txt
+```
+
+Trace files contain one integer or hexadecimal byte address per line. Blank lines and `#` comments are accepted. `wam.traces.iter_addresses` is streaming, so large files need not be loaded unless an experiment explicitly requires a chronological split. Traces can be generated with Valgrind/Lackey, Intel Pin, DynamoRIO, or `perf` and converted to this one-address-per-line format; those tools are not test dependencies.
+
+The generated report is deliberately allowed to conclude that WAM loses. In particular, sequential and constant-stride streams should favor conventional prefetchers, random streams should punish speculative state, and deeper contexts should pay storage and lookup costs unless the workload contains repeatable higher-order structure. The report identifies WAM wins/losses, the best depth and threshold, warm-up, storage, maximum speedup, geometric-mean speedup, break-even accuracy, and the next recommended experiment.
 
 ## Context-sensitive experiment
 
