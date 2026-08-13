@@ -1,0 +1,26 @@
+{
+  "trace_name": "453.povray-576B.champsimtrace.xz",
+  "trace": "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/453.povray-576B.champsimtrace.xz",
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "returncode": 0,
+  "status": "completed",
+  "elapsed_seconds": 138.9621720314026,
+  "json_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/set_associative_wam/runs/453.povray-576B/stats.json",
+  "event_path": "/private/tmp/set_associative_wam_raw/453.povray-576B/events.bin",
+  "prediction_path": "/private/tmp/set_associative_wam_raw/453.povray-576B/predictions.bin",
+  "stdout_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/set_associative_wam/runs/453.povray-576B/stdout.txt",
+  "stderr_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/set_associative_wam/runs/453.povray-576B/stderr.txt",
+  "executable": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_set_associative_wam",
+  "command": [
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_set_associative_wam",
+    "--hide-heartbeat",
+    "--warmup-instructions",
+    "5000000",
+    "--simulation-instructions",
+    "10000000",
+    "--json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/set_associative_wam/runs/453.povray-576B/stats.json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/453.povray-576B.champsimtrace.xz"
+  ]
+}

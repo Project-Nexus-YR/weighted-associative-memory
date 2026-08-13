@@ -1,0 +1,30 @@
+{
+  "variant": "SetAssociativeWAM",
+  "sets": 64,
+  "ways": 4,
+  "total_entries": 256,
+  "replacement": "round_robin_next_way_per_set",
+  "entry_bytes": 32,
+  "pending_context_bytes": 256,
+  "horizon": 16,
+  "context_depth": 4,
+  "confidence_threshold": 8,
+  "hash_function": "SplitMix64 finalizer preserved from DirectMappedWAM",
+  "direct_logical_state_bytes": 8448,
+  "set_logical_state_bytes": 8512,
+  "storage_delta_bytes": 64,
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "traces": 10,
+  "champsim_commit": "51588e1d6f97875fe8de1a3621d28668bff83fcf",
+  "controls": [
+    "DirectMappedWAM frozen diagnostic results",
+    "NativeSPP frozen real-trace results",
+    "NoPrefetch frozen real-trace results"
+  ],
+  "production_semantics_changed": false,
+  "diagnostic_fields_excluded_from_storage": true,
+  "classification": "A \u2014 Aliasing hypothesis falsified",
+  "research_decision": "RESEARCH_DECISION = STOP",
+  "next_variant": "NONE"
+}

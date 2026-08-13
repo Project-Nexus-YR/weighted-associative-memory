@@ -1,0 +1,21 @@
+trace,variant,table_entries,prediction_lookups,tag_hits,tag_misses,alias_loss_events,alias_loss_rate,replacement_events,note,set_conflict_lookups,unresolved_conflict_events,same_set_distinct_contexts,direct_map_alias_equivalent_events,empty_way_insertions,conflict_insertions,reused_before_replacement,way0_hits,way1_hits,way2_hits,way3_hits
+403.gcc-48B,DirectMappedWAM,256,13376,2491,10885,10611,0.7932864832535885,0,frozen direct-map hash alias misses,,,,,,,,,,,
+403.gcc-48B,SetAssociativeWAM,256,13376,2556,10820,10556,0.7891746411483254,10543,SA loss is an all-four-ways-valid tag miss,10744,10556,7951,390,256,10543,86,593,674,674,615
+410.bwaves-945B,DirectMappedWAM,256,427,0,427,203,0.47540983606557374,0,frozen direct-map hash alias misses,,,,,,,,,,,
+410.bwaves-945B,SetAssociativeWAM,256,427,0,427,162,0.3793911007025761,162,SA loss is an all-four-ways-valid tag miss,353,162,363,0,249,162,0,0,0,0,0
+416.gamess-875B,DirectMappedWAM,256,18605,394,18211,17940,0.9642569201827466,0,frozen direct-map hash alias misses,,,,,,,,,,,
+416.gamess-875B,SetAssociativeWAM,256,18605,347,18258,17988,0.9668368718086536,18017,SA loss is an all-four-ways-valid tag miss,18185,17988,15157,139,256,18017,31,67,82,111,87
+429.mcf-217B,DirectMappedWAM,256,1150578,7,1150571,1150304,0.9997618588222615,0,frozen direct-map hash alias misses,,,,,,,,,,,
+429.mcf-217B,SetAssociativeWAM,256,1150578,0,1150578,1150310,0.999767073592577,1150306,SA loss is an all-four-ways-valid tag miss,1150497,1150310,350793,0,256,1150306,0,0,0,0,0
+434.zeusmp-10B,DirectMappedWAM,256,243078,2706,240372,240104,0.9877652440780326,0,frozen direct-map hash alias misses,,,,,,,,,,,
+434.zeusmp-10B,SetAssociativeWAM,256,243078,54,243024,242753,0.998662980607048,242759,SA loss is an all-four-ways-valid tag miss,242940,242753,143990,29,256,242759,7,15,14,11,14
+435.gromacs-111B,DirectMappedWAM,256,204538,49,204489,204211,0.9984012750686914,0,frozen direct-map hash alias misses,,,,,,,,,,,
+435.gromacs-111B,SetAssociativeWAM,256,204538,10,204528,204258,0.9986310612208978,204257,SA loss is an all-four-ways-valid tag miss,204449,204258,165955,3,256,204257,1,4,1,2,3
+447.dealII-3B,DirectMappedWAM,256,25209,18,25191,24920,0.9885358403744694,0,frozen direct-map hash alias misses,,,,,,,,,,,
+447.dealII-3B,SetAssociativeWAM,256,25209,19,25190,24922,0.9886151771192828,24919,SA loss is an all-four-ways-valid tag miss,25111,24922,6045,5,256,24919,1,1,6,7,5
+453.povray-576B,DirectMappedWAM,256,117763,1169,116594,116321,0.987755067381096,0,frozen direct-map hash alias misses,,,,,,,,,,,
+453.povray-576B,SetAssociativeWAM,256,117763,303,117460,117192,0.9951512784151219,117206,SA loss is an all-four-ways-valid tag miss,117377,117192,25478,146,256,117206,18,69,81,90,63
+454.calculix-104B,DirectMappedWAM,256,619,0,619,382,0.617124394184168,0,frozen direct-map hash alias misses,,,,,,,,,,,
+454.calculix-104B,SetAssociativeWAM,256,619,0,619,350,0.5654281098546042,350,SA loss is an all-four-ways-valid tag miss,545,350,555,0,253,350,0,0,0,0,0
+465.tonto-44B,DirectMappedWAM,256,31457,161,31296,31020,0.9861080204723909,0,frozen direct-map hash alias misses,,,,,,,,,,,
+465.tonto-44B,SetAssociativeWAM,256,31457,122,31335,31062,0.9874431763995295,31074,SA loss is an all-four-ways-valid tag miss,31255,31062,14939,57,256,31074,10,34,33,28,27

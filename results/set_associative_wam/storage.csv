@@ -1,0 +1,3 @@
+variant,table_entries,sets,ways,entry_bytes,pending_bytes,replacement_metadata_bytes,logical_state_bytes,delta_vs_direct_bytes,budget_note
+DirectMappedWAM,256,256,1,32,256,0,8448,0,diagnostic fields excluded
+SetAssociativeWAM,256,64,4,32,256,64,8512,64,one byte round-robin pointer per set; diagnostic fields excluded

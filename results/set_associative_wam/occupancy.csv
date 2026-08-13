@@ -1,0 +1,21 @@
+trace,variant,occupancy0,occupancy1,occupancy2,occupancy3,occupancy4,occupied_entries,occupied_fraction,sets_ever_full,note
+403.gcc-48B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+403.gcc-48B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets
+410.bwaves-945B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+410.bwaves-945B,SetAssociativeWAM,0,0,0,7,57,249,0.97265625,57,occupancy bins count sets
+416.gamess-875B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+416.gamess-875B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets
+429.mcf-217B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+429.mcf-217B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets
+434.zeusmp-10B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+434.zeusmp-10B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets
+435.gromacs-111B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+435.gromacs-111B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets
+447.dealII-3B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+447.dealII-3B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets
+453.povray-576B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+453.povray-576B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets
+454.calculix-104B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+454.calculix-104B,SetAssociativeWAM,0,0,1,1,62,253,0.98828125,62,occupancy bins count sets
+465.tonto-44B,DirectMappedWAM,not_exposed,not_exposed,not_exposed,not_exposed,not_applicable,256,1.0,not_applicable,direct per-set occupancy was not exposed
+465.tonto-44B,SetAssociativeWAM,0,0,0,0,64,256,1.0,64,occupancy bins count sets

@@ -1,0 +1,21 @@
+trace,variant,depth,horizon,prediction_lookups,generated_predictions,resolved_predictions,correct_predictions,accuracy,coverage,confidence_mean,support_mean,support_max,note
+403.gcc-48B,DirectMappedWAM,4,16,13376,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+403.gcc-48B,SetAssociativeWAM,4,16,13376,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+410.bwaves-945B,DirectMappedWAM,4,16,427,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+410.bwaves-945B,SetAssociativeWAM,4,16,427,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+416.gamess-875B,DirectMappedWAM,4,16,18605,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+416.gamess-875B,SetAssociativeWAM,4,16,18605,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+429.mcf-217B,DirectMappedWAM,4,16,1150578,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+429.mcf-217B,SetAssociativeWAM,4,16,1150578,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+434.zeusmp-10B,DirectMappedWAM,4,16,243078,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+434.zeusmp-10B,SetAssociativeWAM,4,16,243078,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+435.gromacs-111B,DirectMappedWAM,4,16,204538,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+435.gromacs-111B,SetAssociativeWAM,4,16,204538,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+447.dealII-3B,DirectMappedWAM,4,16,25209,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+447.dealII-3B,SetAssociativeWAM,4,16,25209,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+453.povray-576B,DirectMappedWAM,4,16,117763,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+453.povray-576B,SetAssociativeWAM,4,16,117763,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+454.calculix-104B,DirectMappedWAM,4,16,619,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+454.calculix-104B,SetAssociativeWAM,4,16,619,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches
+465.tonto-44B,DirectMappedWAM,4,16,31457,0,0,0,0.0,0.0,0.0,0.0,0,frozen control; no extra diagnostic prefetches
+465.tonto-44B,SetAssociativeWAM,4,16,31457,0,0,0,0.0,0.0,0.0,0.0,0,same online state/update path; no extra diagnostic prefetches

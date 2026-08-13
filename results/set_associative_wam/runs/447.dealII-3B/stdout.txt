@@ -1,0 +1,143 @@
+[VMEM] WARNING: physical memory size is smaller than virtual memory size.
+
+*** ChampSim Multicore Out-of-Order Simulator ***
+Warmup Instructions: 5000000
+Simulation Instructions: 10000000
+Number of CPUs: 1
+Page size: 4096
+
+Off-chip DRAM Size: 16 GiB Channels: 1 Width: 64-bit Data Rate: 3205 MT/s
+WAM-SA-DIAG-SAMPLE event=3 raw=5210696512 line=81417133 key=7722454805545380932 set=57
+WAM-SA-DIAG-SAMPLE event=4 raw=7468724160 line=116698815 key=8240882279781683722 set=45
+WAM-SA-DIAG-SAMPLE event=5 raw=14550198272 line=227346848 key=5828287994924186782 set=6
+WAM-SA-DIAG-SAMPLE event=6 raw=6743856960 line=105372765 key=2154596390287007211 set=19
+WAM-SA-DIAG-SAMPLE event=7 raw=6743857152 line=105372768 key=17446896899889910348 set=5
+WAM-SA-DIAG-SAMPLE event=8 raw=6743856896 line=105372764 key=11212059037714402220 set=33
+WAM-SA-DIAG-SAMPLE event=9 raw=6743857088 line=105372767 key=7695521885933608656 set=41
+WAM-SA-DIAG-SAMPLE event=10 raw=14054525568 line=219601962 key=3408928787808096468 set=40
+Warmup finished CPU 0 instructions: 5000001 cycles: 2156709 cumulative IPC: 2.318 (Simulation time: 00 hr 00 min 57 sec)
+Warmup complete CPU 0 instructions: 5000001 cycles: 2156709 cumulative IPC: 2.318 (Simulation time: 00 hr 00 min 57 sec)
+Heartbeat CPU 0 instructions: 10000001 cycles: 5673233 heartbeat IPC: 1.763 cumulative IPC: 1.422 (Simulation time: 00 hr 01 min 44 sec)
+Simulation finished CPU 0 instructions: 10000002 cycles: 6970437 cumulative IPC: 1.435 (Simulation time: 00 hr 02 min 24 sec)
+Simulation complete CPU 0 instructions: 10000002 cycles: 6970437 cumulative IPC: 1.435 (Simulation time: 00 hr 02 min 24 sec)
+
+ChampSim completed all CPUs
+
+=== Simulation ===
+CPU 0 runs /Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/447.dealII-3B.champsimtrace.xz
+
+Region of Interest Statistics
+
+CPU 0 cumulative IPC: 1.435 instructions: 10000002 cycles: 6970437
+CPU 0 Branch Prediction Accuracy: 89.49% MPKI: 10.39 Average ROB Occupancy at Mispredict: 62.87
+Branch type MPKI
+BRANCH_DIRECT_JUMP: 0.0005
+BRANCH_INDIRECT: 0.0216
+BRANCH_CONDITIONAL: 10.36
+BRANCH_DIRECT_CALL: 0
+BRANCH_INDIRECT_CALL: 0.0028
+BRANCH_RETURN: 0.0011
+
+cpu0->LLC TOTAL        ACCESS:        246 HIT:          7 MISS:        239 MISS_MERGE:          0
+cpu0->LLC LOAD         ACCESS:        239 HIT:          1 MISS:        238 MISS_MERGE:          0
+cpu0->LLC RFO          ACCESS:          2 HIT:          2 MISS:          0 MISS_MERGE:          0
+cpu0->LLC PREFETCH     ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->LLC WRITE        ACCESS:          3 HIT:          3 MISS:          0 MISS_MERGE:          0
+cpu0->LLC TRANSLATION  ACCESS:          2 HIT:          1 MISS:          1 MISS_MERGE:          0
+cpu0->LLC PREFETCH REQUESTED:          0 ISSUED:          0 USEFUL:          0 USELESS:          0
+cpu0->LLC AVERAGE MISS LATENCY: 163 cycles
+cpu0->cpu0_DTLB TOTAL        ACCESS:    4794171 HIT:    4793350 MISS:        821 MISS_MERGE:        215
+cpu0->cpu0_DTLB LOAD         ACCESS:    4794171 HIT:    4793350 MISS:        821 MISS_MERGE:        215
+cpu0->cpu0_DTLB RFO          ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_DTLB PREFETCH     ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_DTLB WRITE        ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_DTLB TRANSLATION  ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_DTLB PREFETCH REQUESTED:          0 ISSUED:          0 USEFUL:          0 USELESS:          0
+cpu0->cpu0_DTLB AVERAGE MISS LATENCY: 6.378 cycles
+cpu0->cpu0_ITLB TOTAL        ACCESS:     300205 HIT:     299753 MISS:        452 MISS_MERGE:        309
+cpu0->cpu0_ITLB LOAD         ACCESS:     300205 HIT:     299753 MISS:        452 MISS_MERGE:        309
+cpu0->cpu0_ITLB RFO          ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_ITLB PREFETCH     ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_ITLB WRITE        ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_ITLB TRANSLATION  ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_ITLB PREFETCH REQUESTED:          0 ISSUED:          0 USEFUL:          0 USELESS:          0
+cpu0->cpu0_ITLB AVERAGE MISS LATENCY: 5 cycles
+cpu0->cpu0_L1D TOTAL        ACCESS:    4794177 HIT:    4768848 MISS:      25329 MISS_MERGE:       8527
+cpu0->cpu0_L1D LOAD         ACCESS:    3455468 HIT:    3435625 MISS:      19843 MISS_MERGE:       4524
+cpu0->cpu0_L1D RFO          ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L1D PREFETCH     ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L1D WRITE        ACCESS:    1338703 HIT:    1333220 MISS:       5483 MISS_MERGE:       4003
+cpu0->cpu0_L1D TRANSLATION  ACCESS:          6 HIT:          3 MISS:          3 MISS_MERGE:          0
+cpu0->cpu0_L1D PREFETCH REQUESTED:          0 ISSUED:          0 USEFUL:          0 USELESS:          0
+cpu0->cpu0_L1D AVERAGE MISS LATENCY: 10.28 cycles
+cpu0->cpu0_L1I TOTAL        ACCESS:     300205 HIT:     299498 MISS:        707 MISS_MERGE:        300
+cpu0->cpu0_L1I LOAD         ACCESS:     300205 HIT:     299498 MISS:        707 MISS_MERGE:        300
+cpu0->cpu0_L1I RFO          ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L1I PREFETCH     ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L1I WRITE        ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L1I TRANSLATION  ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L1I PREFETCH REQUESTED:          0 ISSUED:          0 USEFUL:          0 USELESS:          0
+cpu0->cpu0_L1I AVERAGE MISS LATENCY: 18.82 cycles
+cpu0->cpu0_L2C TOTAL        ACCESS:      19394 HIT:      19151 MISS:        243 MISS_MERGE:          0
+cpu0->cpu0_L2C LOAD         ACCESS:      15726 HIT:      15487 MISS:        239 MISS_MERGE:          0
+cpu0->cpu0_L2C RFO          ACCESS:       1480 HIT:       1478 MISS:          2 MISS_MERGE:          0
+cpu0->cpu0_L2C PREFETCH     ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L2C WRITE        ACCESS:       2185 HIT:       2185 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_L2C TRANSLATION  ACCESS:          3 HIT:          1 MISS:          2 MISS_MERGE:          0
+cpu0->cpu0_L2C PREFETCH REQUESTED:          0 ISSUED:          0 USEFUL:          0 USELESS:          0
+cpu0->cpu0_L2C AVERAGE MISS LATENCY: 176.3 cycles
+cpu0->cpu0_STLB TOTAL        ACCESS:        749 HIT:        746 MISS:          3 MISS_MERGE:          0
+cpu0->cpu0_STLB LOAD         ACCESS:        749 HIT:        746 MISS:          3 MISS_MERGE:          0
+cpu0->cpu0_STLB RFO          ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_STLB PREFETCH     ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_STLB WRITE        ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_STLB TRANSLATION  ACCESS:          0 HIT:          0 MISS:          0 MISS_MERGE:          0
+cpu0->cpu0_STLB PREFETCH REQUESTED:          0 ISSUED:          0 USEFUL:          0 USELESS:          0
+cpu0->cpu0_STLB AVERAGE MISS LATENCY: 277.3 cycles
+
+DRAM Statistics
+
+Channel 0 RQ ROW_BUFFER_HIT:          2
+  ROW_BUFFER_MISS:        237
+  AVG DBUS CONGESTED CYCLE: 2.882
+Channel 0 WQ ROW_BUFFER_HIT:          0
+  ROW_BUFFER_MISS:          0
+  FULL:          0
+Channel 0 REFRESHES ISSUED:        581
+SetAssociativeWAM-H16 accesses: 25212 predictions: 0 issued: 0 useful_callbacks: 0 delayed_training_updates: 25193 future_leakage_guard: 0 state_bytes: 8512
+WAM-DIAG eligible_accesses_seen=25212 history_updates=25212 contexts_formed=25209 training_pairs_created=25193 unique_contexts=6109 context_revisits=19100 prediction_lookups=25209 prediction_context_hits=19 prediction_context_misses=25190 predictions_generated=0 predictions_above_threshold=0 predictions_below_threshold=19 prefetch_requests_generated=0 prefetch_requests_accepted=0 prefetches_completed=0 prefetched_lines_demanded_later=0 prefetches_useful=0 pending_max=16 pending_expired=16 entry_insertions=25175 entry_evictions=24919 entry_reuses_before_eviction=1 shadow_predictions=0 shadow_correct=0 shadow_unresolved=0 request_rejected_or_duplicate=0
+WAM-SA-DIAG set_lookups=25209 tag_hits=19 tag_misses=25190 empty_way_insertions=256 conflict_insertions=24919 replacement_events=24919 reused_before_replacement=1 way0_hits=1 way1_hits=6 way2_hits=7 way3_hits=5 set_conflict_lookups=25111 unresolved_conflict_events=24922 same_set_distinct_contexts=6045 direct_map_alias_equivalent_events=5 occupied_sets=64 sets_ever_reaching_4way=64 occupancy0=0 occupancy1=0 occupancy2=0 occupancy3=0 occupancy4=64 active_contexts_per_occupied_set_mean=393.891 set_pressure_median=95 set_pressure_p90=108 set_pressure_p95=112 set_pressure_p99=120 set_pressure_max=122
+WAM-DIAG-CONFIDENCE bin=0 count=0
+WAM-DIAG-CONFIDENCE bin=1 count=19
+WAM-DIAG-CONFIDENCE bin=2 count=0
+WAM-DIAG-CONFIDENCE bin=3 count=0
+WAM-DIAG-CONFIDENCE bin=4 count=0
+WAM-DIAG-CONFIDENCE bin=5 count=0
+WAM-DIAG-CONFIDENCE bin=6 count=0
+WAM-DIAG-CONFIDENCE bin=7 count=0
+WAM-DIAG-CONFIDENCE bin=8 count=0
+WAM-DIAG-CONFIDENCE bin=9 count=0
+WAM-DIAG-CONFIDENCE bin=10 count=0
+WAM-DIAG-CONFIDENCE bin=11 count=0
+WAM-DIAG-CONFIDENCE bin=12 count=0
+WAM-DIAG-CONFIDENCE bin=13 count=0
+WAM-DIAG-CONFIDENCE bin=14 count=0
+WAM-DIAG-CONFIDENCE bin=15 count=0
+WAM-DIAG-SUPPORT bin=0 count=0
+WAM-DIAG-SUPPORT bin=1 count=0
+WAM-DIAG-SUPPORT bin=2 count=11
+WAM-DIAG-SUPPORT bin=3 count=5
+WAM-DIAG-SUPPORT bin=4 count=2
+WAM-DIAG-SUPPORT bin=5 count=1
+WAM-DIAG-SUPPORT bin=6 count=0
+WAM-DIAG-SUPPORT bin=7 count=0
+WAM-DIAG-SUPPORT bin=8 count=0
+WAM-DIAG-SUPPORT bin=9 count=0
+WAM-DIAG-SUPPORT bin=10 count=0
+WAM-DIAG-SUPPORT bin=11 count=0
+WAM-DIAG-SUPPORT bin=12 count=0
+WAM-DIAG-SUPPORT bin=13 count=0
+WAM-DIAG-SUPPORT bin=14 count=0
+WAM-DIAG-SUPPORT bin=15 count=0
+WAM-DIAG-SUPPORT bin=16 count=0
+WAM-DIAG-LIMIT prefetch_duplicate_exact=not_exposed prefetch_rejection_reason=not_exposed cache_state_at_prediction=not_exposed prefetch_timeliness=not_exposed instruction_distance=not_exposed

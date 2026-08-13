@@ -35,6 +35,7 @@ def write_configs(validation: Path, baseline: dict) -> dict[str, Path]:
     configs = {
         "baseline": baseline,
         "wam_h16": {**baseline, "executable_name": "champsim_wam_h16", "L2C": {**baseline["L2C"], "prefetcher": "wam_h16"}},
+        "set_associative_wam": {**baseline, "executable_name": "champsim_set_associative_wam", "L2C": {**baseline["L2C"], "prefetcher": "set_associative_wam"}},
         "spp_dev": {**baseline, "executable_name": "champsim_spp_dev", "L2C": {**baseline["L2C"], "prefetcher": "spp_dev"}},
         "ip_stride": {**baseline, "executable_name": "champsim_ip_stride", "L2C": {**baseline["L2C"], "prefetcher": "ip_stride"}},
         "hybrid_spp_wam": {**baseline, "executable_name": "champsim_hybrid_spp_wam", "L2C": {**baseline["L2C"], "prefetcher": "hybrid_spp_wam"}},
@@ -110,6 +111,7 @@ def main() -> None:
     extra_includes = [prefetcher_dir / "wam_h16", root / "prefetcher/spp_dev"]
     build_one(root, config_paths["baseline"], "champsim", include, lib, None)
     build_one(root, config_paths["wam_h16"], "champsim_wam_h16", include, lib, prefetcher_dir)
+    build_one(root, config_paths["set_associative_wam"], "champsim_set_associative_wam", include, lib, prefetcher_dir)
     build_one(root, config_paths["spp_dev"], "champsim_spp_dev", include, lib, None)
     build_one(root, config_paths["ip_stride"], "champsim_ip_stride", include, lib, None)
     build_one(root, config_paths["hybrid_spp_wam"], "champsim_hybrid_spp_wam", include, lib, prefetcher_dir, extra_includes)
@@ -126,7 +128,7 @@ def main() -> None:
         "include": str(include),
         "library": str(lib),
         "build_flags": ["C++17", "-O3", "-Wall", "-Wextra", "-Wshadow", "-Wpedantic", "-Wconversion"],
-        "executables": {name: str(root / "bin" / executable) for name, executable in {"baseline": "champsim", "wam_h16": "champsim_wam_h16", "spp_dev": "champsim_spp_dev", "ip_stride": "champsim_ip_stride", "hybrid_spp_wam": "champsim_hybrid_spp_wam"}.items()},
+        "executables": {name: str(root / "bin" / executable) for name, executable in {"baseline": "champsim", "wam_h16": "champsim_wam_h16", "set_associative_wam": "champsim_set_associative_wam", "spp_dev": "champsim_spp_dev", "ip_stride": "champsim_ip_stride", "hybrid_spp_wam": "champsim_hybrid_spp_wam"}.items()},
         "status": "built",
     }
     (validation / "environment.json").write_text(json.dumps(environment, indent=2) + "\n", encoding="utf-8")
