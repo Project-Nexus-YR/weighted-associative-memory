@@ -1,6 +1,8 @@
 {
-  "trace_dir": "traces",
-  "trace_count": 0,
+  "trace_dir": "traces/source_instrumented/loads",
+  "trace_count": 9,
+  "seed_filter": 0,
+  "workload_filter": null,
   "chronological_fractions": [
     0.5,
     0.7,
@@ -35,5 +37,6 @@
     4
   ],
   "instruction_accesses": "excluded; input traces are data-only",
-  "synthetic_fallback": false
+  "synthetic_fallback": false,
+  "max_accesses_per_trace": 5000
 }

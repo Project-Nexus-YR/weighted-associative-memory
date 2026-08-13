@@ -1,45 +1,50 @@
 # Real-trace evaluation
 
-## Status
+This report uses source-instrumented data-load traces captured from actual benchmark executions. These traces are not equivalent to binary instrumentation; the capture method is recorded as `source_instrumented`.
 
-**Blocked on external traces: no captured data-address traces were available in the environment.** The native benchmark suite was added and compiled, but no Valgrind/Lackey, Intel Pin, DynamoRIO, or perf load trace was available. No synthetic trace was substituted, so this phase makes no claim about real software.
+## Final verdict
 
-## What is ready
+- Traces captured: 37; evaluated representatives: 9.
+- Total references analyzed: 45000.
+- Best WAM configuration: DirectWAM-H16-miss-only (1.098x geomean).
+- Best prior-art-style baseline: GMC (1.714x geomean).
+- WAM irregular geomean: 1.079x; overall DirectWAM-H16 geomean: 1.070x.
+- Best WAM workload speedup: 1.287x.
+- Worst DirectWAM-H16 regression: -0.001.
+- Best tested bounded storage budget: 8192 bytes.
+- Best prediction horizon: H32.
+- Direct-vs-recursive advantage: +0.007x geomean.
+- Fraction of workloads where DirectWAM-H16 wins all listed prior baselines: 11.1%.
+- Hybrid geomean: 1.028x.
+- Depth-1 to depth-16 H1 oracle change: 100.0% -> 100.0% (+0.0%).
+- Best H16 empirical oracle accuracy at depth 16: 12.8%.
+- Cross-run retention: not measured in this representative run; five-seed traces are captured in `capture_inventory.csv`.
 
-The evaluator supports chronological 50/50, 70/30, and 80/20 splits; equal 2–64 KB budgets; direct H8/H16/H32 WAM; hashed context; recursive WAM; Markov-N; VLDP-style delta history; SPP-style recursive signatures; GMC-style multi-order deltas; stride/next-line; hybrid arbitration; miss-only training; horizon oracles; context reuse/entropy; phase windows; and cross-input files when supplied.
+## Answers
 
-## Tooling limitation
-
-`clang`/`gcc` were available. No captured real traces were found and no supported external tracer was installed. Running a benchmark binary alone is not a memory trace and was intentionally not counted as one. Use `scripts/capture_trace.sh`, `scripts/convert_trace.py`, and `python3 -m wam.real_trace_evaluation --trace-dir traces` after installing/configuring a tracer.
+1–3. Real traces show repeated structure, but the measured depth-1/depth-16 H1 oracle change is only +0.0%; long-horizon opportunity is limited in this bounded sample.
+4–9. DirectWAM-H16 reaches 1.070x, below GMC at 1.714x; VLDP/SPP/GMC and Markov-N are included in `summary.csv`.
+10–13. Direct-vs-recursive and budget rows are reported, but the positive WAM result is narrow and source-instrumented rather than binary-traced.
+14–20. Multi-seed captures exist, while cross-run generalization and binary-level confirmation remain open; the evidence does not justify RTL or a novelty claim over prior-art-style predictors.
 
 ## Classification
 
-**Not classified A–F yet.** The requested classification requires real-trace measurements; assigning A would incorrectly treat missing evidence as a negative result.
+**C — Narrow workload-specific win**
 
-## Paper-readiness
+## Limitations
 
-0/10 evidence items can be marked true from this run because no real trace was evaluated.
+VLDP, SPP, and GMC are simplified architectural approximations documented in `wam/real_predictors.py`. The main evaluation uses one seed per benchmark and a 5,000-access chronological prefix for tractability; the raw captures are longer and multi-seed metadata is retained. No instruction PCs are fabricated, and source-instrumented traces should be followed by binary-tracer confirmation when available.
 
-## Requested final verdict fields
+## Paper readiness
 
-- Real workloads evaluated: 0
-- Best WAM configuration: N/A
-- Best prior-art-style baseline: N/A
-- WAM geomean speedup on irregular workloads: N/A
-- WAM geomean speedup overall: N/A
-- Best real-workload speedup: N/A
-- Worst regression: N/A
-- Best storage budget: N/A
-- Best prediction horizon: N/A
-- Direct-vs-recursive advantage: N/A
-- Fraction of workloads where WAM wins: N/A
-- Hybrid geomean speedup: N/A
-- Dominant success condition: N/A
-- Dominant failure condition: Missing external traces, not predictor failure
-- Paper-readiness score: 0/10
-- Final classification: Not classified A–F
-- Single most important next step: capture data-only traces with an external tracer
+- [x] Real traces demonstrate some repeated structure
+- [ ] Long-horizon signal is measurable
+- [ ] WAM beats the strongest baseline
+- [x] Direct horizon beats recursive speculation
+- [ ] Equal-budget multi-seed conclusion is complete
+- [ ] Binary-level trace confirmation is complete
+- [ ] Novelty is distinguishable from existing predictor families
 
-## Single most important next step
+Paper-readiness score: 3/10.
 
-Capture at least one data-only trace each for pointer chasing, graph/tree/hash access, and sequential controls with an external load-instrumentation tool, then rerun this command.
+Single most important next step: aggregate the captured five-seed traces under the same bounded configuration and obtain binary-level data traces for confirmation.

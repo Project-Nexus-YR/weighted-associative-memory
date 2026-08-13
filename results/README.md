@@ -24,4 +24,4 @@ The lead-time experiment is in [`horizon_analysis/report.md`](horizon_analysis/r
 
 The hardware-realism phase is in [`hardware_feasibility/report.md`](hardware_feasibility/report.md). It preserves the earlier result directories and adds explicit predictor latency/throughput, overlap, pipelining, queue/port pressure, bounded hashed storage, counter quantization, update batching, signature compression, prediction caching, fallback/candidate cost, energy proxy, tolerance, and feasibility-matrix artifacts.
 
-The real-trace phase is in [`real_trace_evaluation/report.md`](real_trace_evaluation/report.md). It contains the external-trace evaluator, equal-budget comparative schema, native benchmark/capture workflow references, and an explicit no-fabrication status when no supported tracer or captured trace is available.
+The real-trace phase is in [`real_trace_evaluation/report.md`](real_trace_evaluation/report.md). It contains the source-instrumented fallback results, capture inventory/sanity checks, equal-budget comparative schema, native benchmark/capture workflow references, and explicit limitations separating source instrumentation from binary tracing.

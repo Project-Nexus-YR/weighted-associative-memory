@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180"><rect width="100%" height="100%" fill="white"/><text x="24" y="90" font-family="sans-serif" font-size="18">No real-trace rows available</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="400.0" y="25" text-anchor="middle" font-family="sans-serif" font-size="16">Speedup by predictor and workload</text>
+<line x1="80" y1="400" x2="730" y2="400" stroke="black"/>
+<line x1="80" y1="50" x2="80" y2="400" stroke="black"/>
+<polyline points="80.0,353.5 118.2,339.9 156.5,349.8 194.7,354.0 232.9,360.5 271.2,355.4 309.4,352.3 347.6,355.3 385.9,357.5 424.1,360.3 462.4,348.5 500.6,348.3 538.8,354.4 577.1,364.7 615.3,360.3 653.5,360.5 691.8,364.2 730.0,352.1" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="70" font-family="sans-serif" font-size="12" fill="#1f77b4">binary_tree_size65536_seed0_loads</text>
+<polyline points="80.0,356.5 118.2,353.9 156.5,354.0 194.7,342.6 232.9,358.6 271.2,364.1 309.4,364.0 347.6,364.3 385.9,363.4 424.1,364.2 462.4,362.9 500.6,364.1 538.8,364.0 577.1,363.6 615.3,352.9 653.5,364.2 691.8,369.2 730.0,364.2" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="90" font-family="sans-serif" font-size="12" fill="#d62728">graph_bfs_size65536_seed0_loads</text>
+<polyline points="80.0,364.0 118.2,364.5 156.5,363.5 194.7,363.9 232.9,363.6 271.2,363.1 309.4,363.6 347.6,363.8 385.9,364.0 424.1,364.2 462.4,364.1 500.6,364.1 538.8,364.2 577.1,342.3 615.3,363.9 653.5,364.2 691.8,364.2 730.0,364.2" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="110" font-family="sans-serif" font-size="12" fill="#2ca02c">graph_dfs_size16384_seed0_loads</text>
+<polyline points="80.0,364.3 118.2,364.3 156.5,364.2 194.7,364.2 232.9,364.2 271.2,364.5 309.4,364.4 347.6,364.5 385.9,364.2 424.1,364.2 462.4,364.2 500.6,364.2 538.8,364.2 577.1,364.4 615.3,364.3 653.5,364.2 691.8,364.2 730.0,364.2" fill="none" stroke="#9467bd" stroke-width="2"/>
+<text x="745" y="130" font-family="sans-serif" font-size="12" fill="#9467bd">hash_table_size65536_seed0_loads</text>
+<polyline points="80.0,364.2 118.2,364.2 156.5,364.2 194.7,364.2 232.9,214.4 271.2,365.1 309.4,365.1 347.6,365.1 385.9,364.2 424.1,364.2 462.4,364.2 500.6,364.2 538.8,364.2 577.1,361.7 615.3,364.2 653.5,214.4 691.8,364.2 730.0,214.4" fill="none" stroke="#ff7f0e" stroke-width="2"/>
+<text x="745" y="150" font-family="sans-serif" font-size="12" fill="#ff7f0e">linked_list_size65536_seed0_loads</text>
+<polyline points="80.0,364.2 118.2,364.2 156.5,364.2 194.7,364.2 232.9,302.0 271.2,365.5 309.4,365.4 347.6,365.5 385.9,364.2 424.1,364.2 462.4,364.2 500.6,364.2 538.8,364.2 577.1,356.7 615.3,364.2 653.5,364.2 691.8,364.2 730.0,302.0" fill="none" stroke="#17becf" stroke-width="2"/>
+<text x="745" y="170" font-family="sans-serif" font-size="12" fill="#17becf">matrix_scan_size512_seed0_loads</text>
+<polyline points="80.0,350.3 118.2,350.7 156.5,363.8 194.7,363.1 232.9,358.0 271.2,347.2 309.4,367.0 347.6,364.2 385.9,350.3 424.1,358.0 462.4,400.0 500.6,387.4 538.8,363.1 577.1,365.7 615.3,350.3 653.5,350.3 691.8,364.2 730.0,350.3" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="190" font-family="sans-serif" font-size="12" fill="#1f77b4">pointer_chase_size65536_seed0_loads</text>
+<polyline points="80.0,364.2 118.2,364.2 156.5,364.2 194.7,364.2 232.9,347.9 271.2,365.5 309.4,365.4 347.6,365.5 385.9,364.2 424.1,364.2 462.4,364.2 500.6,364.2 538.8,364.2 577.1,341.9 615.3,364.2 653.5,362.5 691.8,364.2 730.0,364.2" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="210" font-family="sans-serif" font-size="12" fill="#d62728">quicksort_size65536_seed0_loads</text>
+<polyline points="80.0,364.2 118.2,364.2 156.5,364.2 194.7,364.2 232.9,50.0 271.2,364.8 309.4,364.8 347.6,364.8 385.9,364.2 424.1,364.2 462.4,364.2 500.6,364.2 538.8,364.2 577.1,364.2 615.3,364.2 653.5,50.0 691.8,364.2 730.0,50.0" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="230" font-family="sans-serif" font-size="12" fill="#2ca02c">stride_size524288_seed0_loads</text>
+<text x="405.0" y="485" text-anchor="middle" font-family="sans-serif" font-size="12">Predictor index</text>
+<text x="15" y="225.0" transform="rotate(-90 15 225.0)" text-anchor="middle" font-family="sans-serif" font-size="12">Speedup</text>
+</svg>

@@ -1,1 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180"><rect width="100%" height="100%" fill="white"/><text x="24" y="90" font-family="sans-serif" font-size="18">No real-trace rows available</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="400.0" y="25" text-anchor="middle" font-family="sans-serif" font-size="16">Geomean speedup vs predictor storage</text>
+<line x1="80" y1="400" x2="730" y2="400" stroke="black"/>
+<line x1="80" y1="50" x2="80" y2="400" stroke="black"/>
+<polyline points="387.8,324.5" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="70" font-family="sans-serif" font-size="12" fill="#1f77b4">DirectWAM-H16</text>
+<polyline points="227.4,312.6" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="90" font-family="sans-serif" font-size="12" fill="#d62728">DirectWAM-H16-miss-only</text>
+<polyline points="730.0,331.1" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="110" font-family="sans-serif" font-size="12" fill="#2ca02c">DirectWAM-H32</text>
+<polyline points="219.3,325.3" fill="none" stroke="#9467bd" stroke-width="2"/>
+<text x="745" y="130" font-family="sans-serif" font-size="12" fill="#9467bd">DirectWAM-H8</text>
+<polyline points="81.9,50.0" fill="none" stroke="#ff7f0e" stroke-width="2"/>
+<text x="745" y="150" font-family="sans-serif" font-size="12" fill="#ff7f0e">GMC</text>
+<polyline points="82.7,334.6" fill="none" stroke="#17becf" stroke-width="2"/>
+<text x="745" y="170" font-family="sans-serif" font-size="12" fill="#17becf">HashedContext-H16</text>
+<polyline points="82.7,349.8" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="190" font-family="sans-serif" font-size="12" fill="#1f77b4">HashedContext-H32</text>
+<polyline points="82.6,350.0" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="210" font-family="sans-serif" font-size="12" fill="#d62728">HashedContext-H8</text>
+<polyline points="82.7,342.3" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="230" font-family="sans-serif" font-size="12" fill="#2ca02c">Hybrid</text>
+<polyline points="82.0,334.6" fill="none" stroke="#9467bd" stroke-width="2"/>
+<text x="745" y="250" font-family="sans-serif" font-size="12" fill="#9467bd">Markov-1</text>
+<polyline points="82.6,344.5" fill="none" stroke="#ff7f0e" stroke-width="2"/>
+<text x="745" y="270" font-family="sans-serif" font-size="12" fill="#ff7f0e">Markov-N-H16</text>
+<polyline points="82.3,400.0" fill="none" stroke="#17becf" stroke-width="2"/>
+<text x="745" y="290" font-family="sans-serif" font-size="12" fill="#17becf">Markov-N-H2</text>
+<polyline points="82.5,370.9" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="310" font-family="sans-serif" font-size="12" fill="#1f77b4">Markov-N-H4</text>
+<polyline points="82.6,343.9" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="330" font-family="sans-serif" font-size="12" fill="#d62728">Markov-N-H8</text>
+<polyline points="80.0,308.7" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="350" font-family="sans-serif" font-size="12" fill="#2ca02c">NextLine</text>
+<polyline points="138.6,327.5" fill="none" stroke="#9467bd" stroke-width="2"/>
+<text x="745" y="370" font-family="sans-serif" font-size="12" fill="#9467bd">RecursiveWAM</text>
+<polyline points="81.3,131.8" fill="none" stroke="#ff7f0e" stroke-width="2"/>
+<text x="745" y="390" font-family="sans-serif" font-size="12" fill="#ff7f0e">SPP</text>
+<polyline points="80.0,359.2" fill="none" stroke="#17becf" stroke-width="2"/>
+<text x="745" y="410" font-family="sans-serif" font-size="12" fill="#17becf">Stride</text>
+<polyline points="81.5,60.5" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="430" font-family="sans-serif" font-size="12" fill="#1f77b4">VLDP</text>
+<text x="405.0" y="485" text-anchor="middle" font-family="sans-serif" font-size="12">Storage bytes</text>
+<text x="15" y="225.0" transform="rotate(-90 15 225.0)" text-anchor="middle" font-family="sans-serif" font-size="12">Geomean speedup</text>
+</svg>

@@ -50,13 +50,16 @@ class DeltaContextPredictor(Predictor):
     def fit(self, sequence: Iterable[int]) -> "DeltaContextPredictor":
         values = list(sequence)
         self.reset()
+        deltas = [values[index] - values[index - 1] for index in range(1, len(values))]
         for position in range(max(0, len(values) - self.horizon)):
             if position < 1:
                 continue
             target_delta = values[position + self.horizon] - values[position]
             lengths = range(1, min(self.context_depth, position) + 1) if not self.longest_match else (self.context_depth,)
             for length in lengths:
-                key = self._key(values[: position + 1], length)
+                key = tuple(deltas[max(0, position - length):position])
+                if len(key) < length:
+                    continue
                 if key not in self.counts and len(self.counts) >= self.entry_limit:
                     old = self.order.popleft()
                     self.counts.pop(old, None)
@@ -104,6 +107,27 @@ class AddressContextPredictor(DeltaContextPredictor):
 
     def _key(self, values: list[int], length: int) -> tuple[int, ...]:
         return tuple(values[-length:])
+
+    def fit(self, sequence: Iterable[int]) -> "AddressContextPredictor":
+        values = list(sequence)
+        self.reset()
+        for position in range(max(0, len(values) - self.horizon)):
+            if position < 1:
+                continue
+            target_delta = values[position + self.horizon] - values[position]
+            lengths = range(1, min(self.context_depth, position + 1) + 1) if not self.longest_match else (self.context_depth,)
+            for length in lengths:
+                key = tuple(values[max(0, position + 1 - length):position + 1])
+                if len(key) < length:
+                    continue
+                if key not in self.counts and len(self.counts) >= self.entry_limit:
+                    old = self.order.popleft()
+                    self.counts.pop(old, None)
+                if key not in self.counts:
+                    self.order.append(key)
+                self.counts[key][target_delta] = _sat(self.counts[key][target_delta], self.counter_bits)
+                self.observations += 1
+        return self
 
 
 class SPPStylePredictor(DeltaContextPredictor):

@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180"><rect width="100%" height="100%" fill="white"/><text x="24" y="90" font-family="sans-serif" font-size="18">No real-trace rows available</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="400.0" y="25" text-anchor="middle" font-family="sans-serif" font-size="16">Conditional entropy vs context depth</text>
+<line x1="80" y1="400" x2="730" y2="400" stroke="black"/>
+<line x1="80" y1="50" x2="80" y2="400" stroke="black"/>
+<polyline points="80.0,375.4 123.3,378.4 210.0,385.3 383.3,379.7 730.0,381.1" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="70" font-family="sans-serif" font-size="12" fill="#1f77b4">binary_tree_size65536_seed0_loads</text>
+<polyline points="80.0,344.1 123.3,377.3 210.0,388.5 383.3,400.0 730.0,400.0" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="90" font-family="sans-serif" font-size="12" fill="#d62728">graph_bfs_size65536_seed0_loads</text>
+<polyline points="80.0,275.7 123.3,400.0 210.0,400.0 383.3,400.0 730.0,400.0" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="110" font-family="sans-serif" font-size="12" fill="#2ca02c">graph_dfs_size16384_seed0_loads</text>
+<polyline points="80.0,375.0 123.3,397.7 210.0,400.0 383.3,400.0 730.0,400.0" fill="none" stroke="#9467bd" stroke-width="2"/>
+<text x="745" y="130" font-family="sans-serif" font-size="12" fill="#9467bd">hash_table_size65536_seed0_loads</text>
+<polyline points="80.0,204.7 123.3,289.5 210.0,400.0 383.3,400.0 730.0,400.0" fill="none" stroke="#ff7f0e" stroke-width="2"/>
+<text x="745" y="150" font-family="sans-serif" font-size="12" fill="#ff7f0e">linked_list_size65536_seed0_loads</text>
+<polyline points="80.0,269.3 123.3,328.9 210.0,356.6 383.3,400.0 730.0,400.0" fill="none" stroke="#17becf" stroke-width="2"/>
+<text x="745" y="170" font-family="sans-serif" font-size="12" fill="#17becf">matrix_scan_size512_seed0_loads</text>
+<polyline points="80.0,398.6 123.3,400.0 210.0,400.0 383.3,400.0 730.0,400.0" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="745" y="190" font-family="sans-serif" font-size="12" fill="#1f77b4">pointer_chase_size65536_seed0_loads</text>
+<polyline points="80.0,50.0 123.3,229.8 210.0,365.2 383.3,396.3 730.0,399.9" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="745" y="210" font-family="sans-serif" font-size="12" fill="#d62728">quicksort_size65536_seed0_loads</text>
+<polyline points="80.0,159.2 123.3,400.0 210.0,400.0 383.3,400.0 730.0,400.0" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="745" y="230" font-family="sans-serif" font-size="12" fill="#2ca02c">stride_size524288_seed0_loads</text>
+<text x="405.0" y="485" text-anchor="middle" font-family="sans-serif" font-size="12">Depth</text>
+<text x="15" y="225.0" transform="rotate(-90 15 225.0)" text-anchor="middle" font-family="sans-serif" font-size="12">Entropy</text>
+</svg>

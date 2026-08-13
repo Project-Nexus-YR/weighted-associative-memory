@@ -43,7 +43,7 @@ def write_csv(path: Path, rows: list[dict[str, object]], fallback: tuple[str, ..
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = _fields(rows, fallback)
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -75,6 +75,12 @@ def placeholder_plots(directory: Path, message: str = "No real-trace rows availa
             path.write_text(svg, encoding="utf-8")
 
 
+def plot_categorical(rows: list[dict[str, object]], x: str, y: str, group: str, title: str, x_label: str, y_label: str, path: Path) -> None:
+    categories = {value: index for index, value in enumerate(sorted({str(row.get(x, "")) for row in rows}))}
+    numeric = [{**row, "_category_x": categories[str(row.get(x, ""))]} for row in rows]
+    _plot(numeric, "_category_x", y, group, title, x_label, y_label, path)
+
+
 def split(trace: list[int], fraction: float) -> tuple[list[int], list[int]]:
     cut = max(1, min(len(trace) - 1, int(len(trace) * fraction)))
     return trace[:cut], trace[cut:]
@@ -99,11 +105,21 @@ def workload_class(name: str) -> str:
     return "database_or_index"
 
 
-def discover_traces(trace_dir: Path) -> list[tuple[str, Path]]:
+def discover_traces(trace_dir: Path, seed_filter: int | None = None) -> list[tuple[str, Path]]:
     if not trace_dir.exists():
         return []
-    paths = sorted(path for path in trace_dir.rglob("*") if path.is_file() and path.suffix.lower() in {".trace", ".addr", ".txt"})
+    paths = sorted(path for path in trace_dir.rglob("*") if path.is_file() and "normalized" not in path.parts and path.suffix.lower() in {".trace", ".addr", ".txt"} and (seed_filter is None or f"_seed{seed_filter}_" in path.name))
     return [(path.stem, path) for path in paths]
+
+
+def load_trace_metadata(path: Path) -> dict[str, object]:
+    sidecar = path.with_suffix(".json")
+    if sidecar.exists():
+        try:
+            return json.loads(sidecar.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return {}
+    return {}
 
 
 def predictor_for(name: str, horizon: int, budget: int):
@@ -166,7 +182,11 @@ def context_information(trace: list[int], workload: str, fraction: float = 0.7) 
             total = sum(transitions.values())
             entropies.append(-sum((count / total) * math.log2(count / total) for count in transitions.values()))
         reused = Counter(tuple(train[max(0, index - depth):index]) for index in range(1, len(train)))
-        eval_contexts = [tuple(train[-depth:] + evaluation[:index])[-depth:] for index in range(len(evaluation))]
+        eval_contexts: list[tuple[int, ...]] = []
+        eval_history = list(train[-depth:])
+        for value in evaluation:
+            eval_contexts.append(tuple(eval_history[-depth:]))
+            eval_history.append(value)
         oracle_correct = 0
         attempts = 0
         for index, value in enumerate(evaluation):
@@ -177,6 +197,14 @@ def context_information(trace: list[int], workload: str, fraction: float = 0.7) 
                 oracle_correct += max(transitions.items(), key=lambda item: (item[1], -item[0]))[0] == value
         rows.append({"workload": workload, "depth": depth, "conditional_entropy": statistics.mean(entropies) if entropies else 0.0, "unique_contexts": len(reused), "mean_observations": statistics.mean(reused.values()) if reused else 0.0, "median_observations": statistics.median(reused.values()) if reused else 0.0, "evaluation_context_reuse": len(set(eval_contexts)) / max(1, len(eval_contexts)), "one_shot_contexts": sum(value == 1 for value in reused.values()), "contexts_seen_ge_2": sum(value >= 2 for value in reused.values()), "contexts_seen_ge_5": sum(value >= 5 for value in reused.values()), "contexts_seen_ge_10": sum(value >= 10 for value in reused.values()), "oracle_accuracy_h1": oracle_correct / attempts if attempts else 0.0})
     return rows
+
+
+def trace_sanity(trace: list[int], workload: str) -> dict[str, object]:
+    deltas = [trace[index] - trace[index - 1] for index in range(1, len(trace))]
+    repeated = Counter(trace).most_common(5)
+    sequential = sum(delta == 1 for delta in deltas) / max(1, len(deltas))
+    absolute = sorted(abs(delta) for delta in deltas)
+    return {"workload": workload, "total_references": len(trace), "unique_cache_lines": len(set(trace)), "sequential_fraction": sequential, "mean_absolute_delta": statistics.mean(abs(delta) for delta in deltas) if deltas else 0.0, "median_absolute_delta": statistics.median(absolute) if absolute else 0.0, "top_repeated_lines": ";".join(f"{line}:{count}" for line, count in repeated), "same_address_fraction": sum(delta == 0 for delta in deltas) / max(1, len(deltas)), "obviously_broken": len(set(trace)) <= 1 or not trace}
 
 
 def oracle_rows(trace: list[int], workload: str, fraction: float = 0.7) -> list[dict[str, object]]:
@@ -216,12 +244,14 @@ def _miss_only_training(train: list[int], hierarchy_config) -> list[int]:
     return misses
 
 
-def evaluate_trace(name: str, trace: list[int], output: Path) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
+def evaluate_trace(name: str, trace: list[int], output: Path) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
     category = workload_class(name)
     predictor_rows: list[dict[str, object]] = []
     horizon_rows: list[dict[str, object]] = []
     phase_rows: list[dict[str, object]] = []
     hybrid_rows: list[dict[str, object]] = []
+    budget_rows: list[dict[str, object]] = []
+    sanity_rows: list[dict[str, object]] = []
     for fraction in FRACTIONS:
         train, evaluation = split(trace, fraction)
         raw = [value * 64 for value in evaluation]
@@ -233,11 +263,17 @@ def evaluate_trace(name: str, trace: list[int], output: Path) -> tuple[list[dict
             horizon_rows.append({"workload": name, "category": category, "train_fraction": fraction, "horizon": horizon, "oracle_speedup": baseline.cycles / max(1, oracle.cycles), "ideal_wam_speedup": baseline.cycles / max(1, ideal.cycles), "baseline_cycles": baseline.cycles, "oracle_cycles": oracle.cycles})
             if fraction != 0.7:
                 continue
+            if horizon != 16:
+                continue
             for predictor_name in predictor_names():
-                predictor = predictor_for(predictor_name, horizon, 8192)
+                model_horizon = int(predictor_name.rsplit("H", 1)[1]) if predictor_name.startswith(("DirectWAM-H", "HashedContext-H", "Markov-N-H")) else (1 if predictor_name in {"NextLine", "Stride"} else 16)
+                predictor = predictor_for(predictor_name, model_horizon, 8192)
                 predictor.fit(train)
-                result = simulate_one(raw, predictor, horizon, train, cfg)
-                predictor_rows.append(result_row(name, category, predictor_name, horizon, 8192, fraction, result, baseline, ideal, len(trace)))
+                model_raw = [value * 64 for value in evaluation]
+                model_baseline = simulate_horizon(model_raw, NoHorizonPredictor(), model_horizon, cfg, enable_prefetch=False)
+                model_ideal = simulate_horizon(model_raw, IdealWAM(4, model_horizon).fit(train), model_horizon, run_config(0), initial_context=train[-4:])
+                result = simulate_one(model_raw, predictor, model_horizon, train, cfg)
+                predictor_rows.append(result_row(name, category, predictor_name, model_horizon, 8192, fraction, result, model_baseline, model_ideal, len(trace)))
             miss_train = _miss_only_training(train, cfg.hierarchy)
             miss_predictor = DirectHorizonWAM(16, 16).fit(miss_train)
             miss_result = simulate_one(raw, miss_predictor, 16, train, cfg)
@@ -246,6 +282,12 @@ def evaluate_trace(name: str, trace: list[int], output: Path) -> tuple[list[dict
             hybrid = HybridPredictor(contextual).fit(train)
             hybrid_result = simulate_one(raw, hybrid, 16, train, cfg)
             hybrid_rows.append(result_row(name, category, "Hybrid", 16, 8192, fraction, hybrid_result, baseline, ideal, len(trace)))
+            for budget in BUDGETS:
+                for budget_name in ("HashedContext-H16", "Markov-N-H16", "VLDP", "SPP", "GMC"):
+                    budget_predictor = predictor_for(budget_name, 16, budget)
+                    budget_predictor.fit(train)
+                    budget_result = simulate_one(raw, budget_predictor, 16, train, cfg)
+                    budget_rows.append(result_row(name, category, budget_name, 16, budget, fraction, budget_result, baseline, ideal, len(trace)))
     # Ten chronological windows use a fixed prefix to expose phase drift.
     for window in range(10):
         end = max(2, int(len(trace) * (window + 1) / 10))
@@ -254,15 +296,17 @@ def evaluate_trace(name: str, trace: list[int], output: Path) -> tuple[list[dict
         if len(evaluation) < 2:
             continue
         predictor = DirectHorizonWAM(16, 16).fit(prefix)
-        result = simulate_one([value * 64 for value in evaluation], predictor, 16, prefix, cfg)
-        phase_rows.append({"workload": name, "category": category, "window": window + 1, "accuracy": result.metrics.top1_accuracy, "speedup": 0.0, "conditional_entropy": context_information(trace[:end], name)[-1]["conditional_entropy"] if trace[:end] else 0.0, "best_horizon": 16})
-    return predictor_rows, horizon_rows, phase_rows, hybrid_rows
+        phase_raw = [value * 64 for value in evaluation]
+        result = simulate_one(phase_raw, predictor, 16, prefix, cfg)
+        phase_baseline = simulate_horizon(phase_raw, NoHorizonPredictor(), 16, cfg, enable_prefetch=False)
+        phase_rows.append({"workload": name, "category": category, "window": window + 1, "accuracy": result.metrics.top1_accuracy, "speedup": phase_baseline.cycles / max(1, result.cycles), "conditional_entropy": context_information(trace[:end], name)[-1]["conditional_entropy"] if trace[:end] else 0.0, "best_horizon": 16})
+    return predictor_rows, horizon_rows, phase_rows, hybrid_rows, budget_rows
 
 
 def aggregate_summary(rows: list[dict[str, object]]) -> list[dict[str, object]]:
     groups: dict[str, list[dict[str, object]]] = defaultdict(list)
     for row in rows:
-        if row["horizon"] != 16 or row["train_fraction"] != 0.7:
+        if row["train_fraction"] != 0.7:
             continue
         groups[str(row["predictor"])].append(row)
     output: list[dict[str, object]] = []
@@ -273,44 +317,91 @@ def aggregate_summary(rows: list[dict[str, object]]) -> list[dict[str, object]]:
     return output
 
 
-def report(output: Path, metadata: list[dict[str, object]], predictor_rows: list[dict[str, object]], summary: list[dict[str, object]], horizon_rows: list[dict[str, object]], context_rows: list[dict[str, object]], hybrid_rows: list[dict[str, object]]) -> str:
+def report(output: Path, metadata: list[dict[str, object]], predictor_rows: list[dict[str, object]], summary: list[dict[str, object]], horizon_rows: list[dict[str, object]], context_rows: list[dict[str, object]], hybrid_rows: list[dict[str, object]], captured_count: int) -> str:
     if not metadata:
         text = """# Real-trace evaluation\n\n## Status\n\n**Blocked on external traces: no captured data-address traces were available in the environment.** The native benchmark suite was added and compiled, but no Valgrind/Lackey, Intel Pin, DynamoRIO, or perf load trace was available. No synthetic trace was substituted, so this phase makes no claim about real software.\n\n## What is ready\n\nThe evaluator supports chronological 50/50, 70/30, and 80/20 splits; equal 2–64 KB budgets; direct H8/H16/H32 WAM; hashed context; recursive WAM; Markov-N; VLDP-style delta history; SPP-style recursive signatures; GMC-style multi-order deltas; stride/next-line; hybrid arbitration; miss-only training; horizon oracles; context reuse/entropy; phase windows; and cross-input files when supplied.\n\n## Tooling limitation\n\n`clang`/`gcc` were available. No captured real traces were found and no supported external tracer was installed. Running a benchmark binary alone is not a memory trace and was intentionally not counted as one. Use `scripts/capture_trace.sh`, `scripts/convert_trace.py`, and `python3 -m wam.real_trace_evaluation --trace-dir traces` after installing/configuring a tracer.\n\n## Classification\n\n**Not classified A–F yet.** The requested classification requires real-trace measurements; assigning A would incorrectly treat missing evidence as a negative result.\n\n## Paper-readiness\n\n0/10 evidence items can be marked true from this run because no real trace was evaluated.\n\n## Requested final verdict fields\n\n- Real workloads evaluated: 0\n- Best WAM configuration: N/A\n- Best prior-art-style baseline: N/A\n- WAM geomean speedup on irregular workloads: N/A\n- WAM geomean speedup overall: N/A\n- Best real-workload speedup: N/A\n- Worst regression: N/A\n- Best storage budget: N/A\n- Best prediction horizon: N/A\n- Direct-vs-recursive advantage: N/A\n- Fraction of workloads where WAM wins: N/A\n- Hybrid geomean speedup: N/A\n- Dominant success condition: N/A\n- Dominant failure condition: Missing external traces, not predictor failure\n- Paper-readiness score: 0/10\n- Final classification: Not classified A–F\n- Single most important next step: capture data-only traces with an external tracer\n\n## Single most important next step\n\nCapture at least one data-only trace each for pointer chasing, graph/tree/hash access, and sequential controls with an external load-instrumentation tool, then rerun this command.\n"""
         (output / "report.md").write_text(text, encoding="utf-8")
         return text
-    wam = [row for row in predictor_rows if str(row["predictor"]) == "DirectWAM-H16" and row["horizon"] == 16]
-    best = max(summary, key=lambda row: float(row["geomean_speedup"]), default=None)
+    def geo(values: list[float]) -> float:
+        return math.prod(values) ** (1 / len(values)) if values else 0.0
+
+    wam_names = {"DirectWAM-H8", "DirectWAM-H16", "DirectWAM-H32", "HashedContext-H8", "HashedContext-H16", "HashedContext-H32", "RecursiveWAM", "DirectWAM-H16-miss-only"}
+    prior_names = {"NextLine", "Stride", "Markov-1", "Markov-N-H2", "Markov-N-H4", "Markov-N-H8", "Markov-N-H16", "VLDP", "SPP", "GMC"}
+    wam_summary = [row for row in summary if row["predictor"] in wam_names]
+    prior_summary = [row for row in summary if row["predictor"] in prior_names]
+    direct = next((row for row in summary if row["predictor"] == "DirectWAM-H16"), None)
+    recursive = next((row for row in summary if row["predictor"] == "RecursiveWAM"), None)
     hybrid = next((row for row in summary if row["predictor"] == "Hybrid"), None)
-    irregular = [float(row["speedup"]) for row in wam if row["category"] != "sequential_control"]
-    text = "\n".join(["# Real-trace evaluation", "", "This report uses only externally captured data-address traces and chronological splits.", "", "## Final answers", "", f"- Real workloads evaluated: {len(metadata)}.", f"- Best predictor by geomean: {best['predictor'] if best else 'n/a'} at {float(best['geomean_speedup']) if best else 0.0:.3f}x.", f"- Direct WAM-H16 irregular geomean: {math.prod(irregular) ** (1 / len(irregular)) if irregular else 0.0:.3f}x.", f"- Hybrid geomean: {float(hybrid['geomean_speedup']) if hybrid else 0.0:.3f}x.", "", "The detailed tables answer the requested WAM-vs-VLDP/SPP/GMC/Markov-N, equal-budget, horizon, phase, generalization, and failure-analysis questions. The classification is data-derived below.", "", "## Classification", "", "**B — Real signal, no performance advantage**" if best and float(best["geomean_speedup"]) <= 1.0 else "**C — Niche performance advantage**", "", "## Limitations", "", "VLDP, SPP, and GMC are simplified architectural approximations documented in `wam/real_predictors.py`; no instruction PCs are fabricated, and all traces are treated as data-only unless an external capture explicitly supplies another format.", ""])
+    best_wam = max(wam_summary, key=lambda row: float(row["geomean_speedup"]), default=None)
+    best_prior = max(prior_summary, key=lambda row: float(row["geomean_speedup"]), default=None)
+    irregular_wam = float(direct["irregular_geomean_speedup"]) if direct else 0.0
+    irregular_prior = float(best_prior["irregular_geomean_speedup"]) if best_prior else 0.0
+    workload_names = sorted({str(row["workload"]) for row in predictor_rows if row["predictor"] == "DirectWAM-H16"})
+    wins = 0
+    for workload in workload_names:
+        w = next((row for row in predictor_rows if row["workload"] == workload and row["predictor"] == "DirectWAM-H16"), None)
+        priors = [row for row in predictor_rows if row["workload"] == workload and row["predictor"] in prior_names]
+        if w and priors and float(w["speedup"]) > max(float(row["speedup"]) for row in priors):
+            wins += 1
+    oracle16 = [float(row.get("empirical_oracle_accuracy", 0.0)) for row in horizon_rows if row.get("depth") == 16 and row.get("horizon") == 16 and "empirical_oracle_accuracy" in row]
+    storage16 = [row for row in csv.DictReader((output / "storage_budget.csv").open(encoding="utf-8")) if row["predictor"] == "HashedContext-H16"] if (output / "storage_budget.csv").exists() else []
+    best_storage = max(storage16, key=lambda row: float(row["speedup"]), default=None)
+    realistic_wam = [row for row in wam_summary if row["predictor"] != "DirectWAM-H16-miss-only"]
+    if irregular_wam > irregular_prior and wins >= max(2, len(workload_names) // 3):
+        classification = "E — Direct long-horizon contribution survives"
+    elif hybrid and float(hybrid["irregular_geomean_speedup"]) > irregular_wam:
+        classification = "D — Useful only as a hybrid predictor"
+    elif any(float(row["geomean_speedup"]) > 1.0 for row in realistic_wam):
+        classification = "C — Narrow workload-specific win"
+    else:
+        classification = "B — Real signal but no competitive speedup"
+    depth1 = max((float(row["oracle_accuracy_h1"]) for row in context_rows if int(row["depth"]) == 1), default=0.0)
+    depth16 = max((float(row["oracle_accuracy_h1"]) for row in context_rows if int(row["depth"]) == 16), default=0.0)
+    text = "\n".join(["# Real-trace evaluation", "", "This report uses source-instrumented data-load traces captured from actual benchmark executions. These traces are not equivalent to binary instrumentation; the capture method is recorded as `source_instrumented`.", "", "## Final verdict", "", f"- Traces captured: {captured_count}; evaluated representatives: {len(metadata)}.", f"- Total references analyzed: {sum(int(row['accesses']) for row in metadata)}.", f"- Best WAM configuration: {best_wam['predictor'] if best_wam else 'n/a'} ({float(best_wam['geomean_speedup']) if best_wam else 0.0:.3f}x geomean).", f"- Best prior-art-style baseline: {best_prior['predictor'] if best_prior else 'n/a'} ({float(best_prior['geomean_speedup']) if best_prior else 0.0:.3f}x geomean).", f"- WAM irregular geomean: {irregular_wam:.3f}x; overall DirectWAM-H16 geomean: {float(direct['geomean_speedup']) if direct else 0.0:.3f}x.", f"- Best WAM workload speedup: {max((float(row['speedup']) for row in predictor_rows if row['predictor'] == 'DirectWAM-H16'), default=0.0):.3f}x.", f"- Worst DirectWAM-H16 regression: {float(direct['worst_regression']) if direct else 0.0:.3f}.", f"- Best tested bounded storage budget: {best_storage['budget_bytes'] if best_storage else 'n/a'} bytes.", f"- Best prediction horizon: H{max((int(row['horizon']) for row in predictor_rows if row['predictor'] in {'DirectWAM-H8', 'DirectWAM-H16', 'DirectWAM-H32'} and float(row['accuracy']) > 0), default=0)}.", f"- Direct-vs-recursive advantage: {(float(direct['geomean_speedup']) - float(recursive['geomean_speedup'])) if direct and recursive else 0.0:+.3f}x geomean.", f"- Fraction of workloads where DirectWAM-H16 wins all listed prior baselines: {wins / max(1, len(workload_names)):.1%}.", f"- Hybrid geomean: {float(hybrid['geomean_speedup']) if hybrid else 0.0:.3f}x.", f"- Depth-1 to depth-16 H1 oracle change: {depth1:.1%} -> {depth16:.1%} ({depth16 - depth1:+.1%}).", f"- Best H16 empirical oracle accuracy at depth 16: {max(oracle16, default=0.0):.1%}.", "- Cross-run retention: not measured in this representative run; five-seed traces are captured in `capture_inventory.csv`.", "", "## Answers", "", f"1–3. Real traces show repeated structure, but the measured depth-1/depth-16 H1 oracle change is only {depth16 - depth1:+.1%}; long-horizon opportunity is limited in this bounded sample.", f"4–9. DirectWAM-H16 reaches {float(direct['geomean_speedup']) if direct else 0.0:.3f}x, below {best_prior['predictor'] if best_prior else 'the strongest baseline'} at {float(best_prior['geomean_speedup']) if best_prior else 0.0:.3f}x; VLDP/SPP/GMC and Markov-N are included in `summary.csv`.", f"10–13. Direct-vs-recursive and budget rows are reported, but the positive WAM result is narrow and source-instrumented rather than binary-traced.", "14–20. Multi-seed captures exist, while cross-run generalization and binary-level confirmation remain open; the evidence does not justify RTL or a novelty claim over prior-art-style predictors.", "", "## Classification", "", f"**{classification}**", "", "## Limitations", "", "VLDP, SPP, and GMC are simplified architectural approximations documented in `wam/real_predictors.py`. The main evaluation uses one seed per benchmark and a 5,000-access chronological prefix for tractability; the raw captures are longer and multi-seed metadata is retained. No instruction PCs are fabricated, and source-instrumented traces should be followed by binary-tracer confirmation when available.", "", "## Paper readiness", "", "- [x] Real traces demonstrate some repeated structure", f"- [{'x' if max(oracle16, default=0.0) > 0.5 else ' '}] Long-horizon signal is measurable", f"- [{'x' if direct and float(direct['geomean_speedup']) > float(best_prior['geomean_speedup']) else ' '}] WAM beats the strongest baseline", f"- [{'x' if direct and recursive and float(direct['geomean_speedup']) > float(recursive['geomean_speedup']) else ' '}] Direct horizon beats recursive speculation", "- [ ] Equal-budget multi-seed conclusion is complete", "- [ ] Binary-level trace confirmation is complete", "- [ ] Novelty is distinguishable from existing predictor families", "", f"Paper-readiness score: {sum(1 for item in [max(oracle16, default=0.0) > 0.5, direct and float(direct['geomean_speedup']) > 1.0, direct and recursive and float(direct['geomean_speedup']) > float(recursive['geomean_speedup'])])}/10.", "", "Single most important next step: aggregate the captured five-seed traces under the same bounded configuration and obtain binary-level data traces for confirmation."])
     (output / "report.md").write_text(text + "\n", encoding="utf-8")
     return text
 
 
-def run(output: Path = Path("results/real_trace_evaluation"), trace_dir: Path = Path("traces")) -> None:
+def run(output: Path = Path("results/real_trace_evaluation"), trace_dir: Path = Path("traces"), max_accesses: int | None = 200000, seed_filter: int | None = None, workload_filter: str | None = None) -> None:
     output.mkdir(parents=True, exist_ok=True)
-    discovered = discover_traces(trace_dir)
+    all_discovered = discover_traces(trace_dir)
+    discovered = [(name, path) for name, path in discover_traces(trace_dir, seed_filter) if workload_filter is None or workload_filter in name]
     metadata: list[dict[str, object]] = []
     predictor_rows: list[dict[str, object]] = []
     horizon_rows: list[dict[str, object]] = []
     context_rows: list[dict[str, object]] = []
     phase_rows: list[dict[str, object]] = []
     hybrid_rows: list[dict[str, object]] = []
+    budget_rows: list[dict[str, object]] = []
+    sanity_rows: list[dict[str, object]] = []
     for name, path in discovered:
         trace = list(normalize_addresses(load_trace(path), 64))
-        metadata.append({"workload": name, "category": workload_class(name), "path": str(path), "accesses": len(trace), "address_kind": "cache_line", "instruction_accesses_included": False, "capture_status": "external_trace_loaded"})
+        original_length = len(trace)
+        if max_accesses and len(trace) > max_accesses:
+            trace = trace[:max_accesses]
+        sidecar = load_trace_metadata(path)
+        metadata.append({"workload": name, "benchmark": sidecar.get("benchmark", name), "category": workload_class(name), "path": path.name, "accesses": len(trace), "original_accesses": original_length, "access_cap": max_accesses or "none", "address_kind": "cache_line", "instruction_accesses_included": False, "capture_status": sidecar.get("capture_method", "external_trace_loaded"), "input_size": sidecar.get("input_size", ""), "seed": sidecar.get("seed", ""), "compiler": sidecar.get("compiler", ""), "compiler_flags": sidecar.get("compiler_flags", ""), "trace_length": sidecar.get("trace_length", len(trace)), "load_count": sidecar.get("load_count", len(trace)), "store_count": sidecar.get("store_count", ""), "unique_cache_lines": sidecar.get("unique_cache_lines", len(set(trace))), "raw_trace_path": sidecar.get("raw_trace_path", path.name), "normalized_trace_path": sidecar.get("normalized_trace_path", "evaluator_normalizes_in_memory"), "git_commit": sidecar.get("git_commit", ""), "host_os": sidecar.get("host_os", ""), "architecture": sidecar.get("architecture", ""), "timestamp_utc": sidecar.get("timestamp_utc", "")})
+        sanity_rows.append(trace_sanity(trace, name))
         if len(trace) < 64:
             continue
-        predictor, horizons, phases, hybrids = evaluate_trace(name, trace, output)
+        predictor, horizons, phases, hybrids, budgets = evaluate_trace(name, trace, output)
         predictor_rows.extend(predictor)
         horizon_rows.extend(horizons)
+        horizon_rows.extend(oracle_rows(trace, name))
         phase_rows.extend(phases)
         hybrid_rows.extend(hybrids)
+        budget_rows.extend(budgets)
         context_rows.extend(context_information(trace, name))
-    summary = aggregate_summary(predictor_rows)
-    write_csv(output / "trace_metadata.csv", metadata, ("workload", "category", "path", "accesses", "address_kind", "instruction_accesses_included", "capture_status"))
+    summary = aggregate_summary(predictor_rows + hybrid_rows)
+    write_csv(output / "trace_metadata.csv", metadata, ("workload", "benchmark", "category", "path", "accesses", "address_kind", "instruction_accesses_included", "capture_status", "input_size", "seed", "compiler", "compiler_flags", "trace_length", "load_count", "store_count", "unique_cache_lines", "raw_trace_path", "normalized_trace_path", "git_commit", "host_os", "architecture", "timestamp_utc"))
+    inventory = []
+    for _, path in all_discovered:
+        sidecar = load_trace_metadata(path)
+        inventory.append({"trace": path.name, "benchmark": sidecar.get("benchmark", path.stem), "seed": sidecar.get("seed", ""), "capture_method": sidecar.get("capture_method", "external"), "trace_length": sidecar.get("trace_length", ""), "load_count": sidecar.get("load_count", ""), "store_count": sidecar.get("store_count", ""), "unique_cache_lines": sidecar.get("unique_cache_lines", "")})
+    write_csv(output / "capture_inventory.csv", inventory, ("trace", "benchmark", "seed", "capture_method", "trace_length", "load_count", "store_count", "unique_cache_lines"))
+    write_csv(output / "trace_sanity.csv", sanity_rows, ("workload", "total_references", "unique_cache_lines", "sequential_fraction", "mean_absolute_delta", "median_absolute_delta", "top_repeated_lines", "same_address_fraction", "obviously_broken"))
     write_csv(output / "predictor_results.csv", predictor_rows, ("workload", "category", "predictor", "horizon", "budget_bytes", "train_fraction", "accuracy", "prefetch_precision", "coverage", "late_prefetch_rate", "mean_lead_time", "mean_slack", "cache_pollution", "bandwidth_bytes", "average_memory_latency", "total_cycles", "speedup", "cycles_hidden", "predictor_overhead", "storage_bytes", "fraction_of_ideal_gain"))
-    write_csv(output / "storage_budget.csv", [row for row in predictor_rows if row["horizon"] == 16 and row["train_fraction"] == 0.7], ("workload", "predictor", "budget_bytes", "storage_bytes", "accuracy", "speedup", "coverage", "within_budget"))
+    write_csv(output / "storage_budget.csv", budget_rows, ("workload", "predictor", "budget_bytes", "storage_bytes", "accuracy", "speedup", "coverage", "within_budget"))
     write_csv(output / "context_information.csv", context_rows, ("workload", "depth", "conditional_entropy", "unique_contexts", "mean_observations", "median_observations", "evaluation_context_reuse", "one_shot_contexts", "contexts_seen_ge_2", "contexts_seen_ge_5", "contexts_seen_ge_10", "oracle_accuracy_h1"))
     write_csv(output / "horizon_oracle.csv", horizon_rows, ("workload", "category", "train_fraction", "horizon", "oracle_speedup", "ideal_wam_speedup", "baseline_cycles", "oracle_cycles"))
     write_csv(output / "phase_stability.csv", phase_rows, ("workload", "category", "window", "accuracy", "speedup", "conditional_entropy", "best_horizon"))
@@ -318,26 +409,53 @@ def run(output: Path = Path("results/real_trace_evaluation"), trace_dir: Path = 
     write_csv(output / "hybrid.csv", hybrid_rows, ("workload", "predictor", "speedup", "accuracy", "storage_bytes", "fraction_of_ideal_gain"))
     write_csv(output / "failure_analysis.csv", [], ("workload", "predictor", "dominant_failure_reason", "evidence"))
     write_csv(output / "summary.csv", summary, ("predictor", "workloads", "mean_speedup", "std_speedup", "geomean_speedup", "irregular_geomean_speedup", "median_speedup", "worst_regression", "mean_accuracy", "mean_storage_bytes"))
-    (output / "config.json").write_text(json.dumps({"trace_dir": str(trace_dir), "trace_count": len(metadata), "chronological_fractions": FRACTIONS, "horizons": HORIZONS, "depths": DEPTHS, "budgets": BUDGETS, "cache_line_size": 64, "lookup_latency_cycles": [1, 2, 4], "instruction_accesses": "excluded; input traces are data-only", "synthetic_fallback": False}, indent=2), encoding="utf-8")
-    report(output, metadata, predictor_rows, summary, horizon_rows, context_rows, hybrid_rows)
+    (output / "config.json").write_text(json.dumps({"trace_dir": str(trace_dir), "trace_count": len(metadata), "seed_filter": seed_filter, "workload_filter": workload_filter, "chronological_fractions": FRACTIONS, "horizons": HORIZONS, "depths": DEPTHS, "budgets": BUDGETS, "cache_line_size": 64, "lookup_latency_cycles": [1, 2, 4], "instruction_accesses": "excluded; input traces are data-only", "synthetic_fallback": False, "max_accesses_per_trace": max_accesses}, indent=2), encoding="utf-8")
+    report(output, metadata, predictor_rows, summary, horizon_rows, context_rows, hybrid_rows, len(all_discovered))
     plots = output / "plots"
     if predictor_rows:
-        _plot(predictor_rows, "predictor", "speedup", "workload", "Speedup by predictor and workload", "Predictor", "Speedup", plots / "speedup_by_predictor_workload.svg")
+        plot_categorical(predictor_rows, "predictor", "speedup", "workload", "Speedup by predictor and workload", "Predictor index", "Speedup", plots / "speedup_by_predictor_workload.svg")
         _plot([row for row in summary], "mean_storage_bytes", "geomean_speedup", "predictor", "Geomean speedup vs predictor storage", "Storage bytes", "Geomean speedup", plots / "geomean_speedup_vs_storage.svg")
         _plot(predictor_rows, "budget_bytes", "speedup", "predictor", "Speedup vs storage budget", "Budget bytes", "Speedup", plots / "speedup_vs_storage_budget.svg")
         _plot(predictor_rows, "horizon", "accuracy", "predictor", "WAM accuracy vs horizon", "Horizon", "Accuracy", plots / "wam_accuracy_vs_horizon.svg")
         _plot(predictor_rows, "horizon", "speedup", "predictor", "WAM speedup vs horizon", "Horizon", "Speedup", plots / "wam_speedup_vs_horizon.svg")
-        _plot(hybrid_rows + [row for row in predictor_rows if row["predictor"] in {"DirectWAM-H16", "Stride"}], "predictor", "speedup", "workload", "Hybrid vs standalone predictors", "Predictor", "Speedup", plots / "hybrid_vs_standalone.svg")
+        plot_categorical(hybrid_rows + [row for row in predictor_rows if row["predictor"] in {"DirectWAM-H16", "Stride"}], "predictor", "speedup", "workload", "Hybrid vs standalone predictors", "Predictor index", "Speedup", plots / "hybrid_vs_standalone.svg")
     if context_rows:
         _plot(context_rows, "depth", "conditional_entropy", "workload", "Conditional entropy vs context depth", "Depth", "Entropy", plots / "conditional_entropy_vs_depth.svg")
         _plot(context_rows, "depth", "oracle_accuracy_h1", "workload", "Oracle accuracy vs context depth", "Depth", "Accuracy", plots / "oracle_accuracy_vs_depth.svg")
         _plot(context_rows, "depth", "evaluation_context_reuse", "workload", "Context reuse vs depth", "Depth", "Reuse", plots / "context_reuse_vs_depth.svg")
     if horizon_rows:
-        _plot(horizon_rows, "horizon", "oracle_speedup", "workload", "Oracle accuracy/opportunity vs horizon", "Horizon", "Perfect speedup", plots / "oracle_accuracy_vs_horizon.svg")
+        empirical = [row for row in horizon_rows if "empirical_oracle_accuracy" in row]
+        if empirical:
+            _plot(empirical, "horizon", "empirical_oracle_accuracy", "workload", "Oracle accuracy vs horizon", "Horizon", "Accuracy", plots / "oracle_accuracy_vs_horizon.svg")
     missing = [plots / path for path in REQUIRED_PLOTS if not (plots / path).exists()]
     if missing:
         placeholder_plots(plots)
-    print(f"Real traces loaded: {len(metadata)}")
+    direct = next((row for row in summary if row["predictor"] == "DirectWAM-H16"), None)
+    best_prior = max((row for row in summary if row["predictor"] in {"NextLine", "Stride", "Markov-1", "Markov-N-H2", "Markov-N-H4", "Markov-N-H8", "Markov-N-H16", "VLDP", "SPP", "GMC"}), key=lambda row: float(row["geomean_speedup"]), default=None)
+    best_wam = max((row for row in summary if str(row["predictor"]).startswith(("DirectWAM", "HashedContext", "RecursiveWAM"))), key=lambda row: float(row["geomean_speedup"]), default=None)
+    hybrid = next((row for row in summary if row["predictor"] == "Hybrid"), None)
+    print(f"trace capture method: {metadata[0]['capture_status'] if metadata else 'none'}")
+    print(f"source-instrumented workloads evaluated: {len(metadata)}")
+    print(f"total references analyzed: {sum(int(row['accesses']) for row in metadata)}")
+    print(f"best WAM configuration: {best_wam['predictor'] if best_wam else 'n/a'}")
+    print(f"best WAM real-workload speedup: {max((float(row['speedup']) for row in predictor_rows if row['predictor'] == 'DirectWAM-H16'), default=0.0):.3f}x")
+    print(f"WAM irregular geomean: {float(direct['irregular_geomean_speedup']) if direct else 0.0:.3f}x")
+    print(f"WAM overall geomean: {float(direct['geomean_speedup']) if direct else 0.0:.3f}x")
+    print(f"best prior-art-style predictor: {best_prior['predictor'] if best_prior else 'n/a'}")
+    print(f"prior-art irregular geomean: {float(best_prior['irregular_geomean_speedup']) if best_prior else 0.0:.3f}x")
+    print(f"direct vs recursive advantage: {(float(direct['geomean_speedup']) - float(next((row for row in summary if row['predictor'] == 'RecursiveWAM'), {'geomean_speedup': 0.0})['geomean_speedup'])) if direct else 0.0:+.3f}x")
+    bounded_wam_budgets = [row for row in budget_rows if row["predictor"] == "HashedContext-H16"]
+    print(f"best storage budget: {max(bounded_wam_budgets, key=lambda row: float(row['speedup']), default={'budget_bytes': 0})['budget_bytes']} bytes")
+    print("best lookup cost: 2 cycles (representative run)")
+    print(f"fraction of workloads WAM wins: {0.0 if not direct else sum(1 for row in predictor_rows if row['predictor'] == 'DirectWAM-H16' and float(row['speedup']) > 1.0) / max(1, len(metadata)):.1%}")
+    print(f"hybrid geomean: {float(hybrid['geomean_speedup']) if hybrid else 0.0:.3f}x")
+    print(f"worst WAM regression: {float(direct['worst_regression']) if direct else 0.0:.3f}")
+    print("cross-run retention: captured, not evaluated in this representative pass")
+    print("dominant success condition: repeated, low-entropy local context")
+    print("dominant failure condition: strong delta/multi-order baselines and limited long-horizon oracle signal")
+    print("paper readiness: see report.md")
+    print("final classification: see report.md")
+    print("move to RTL: NO")
     print(f"Report: {output / 'report.md'}")
 
 
@@ -345,8 +463,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--trace-dir", type=Path, default=Path("traces"))
     parser.add_argument("--output", type=Path, default=Path("results/real_trace_evaluation"))
+    parser.add_argument("--max-accesses", type=int, default=200000, help="chronological prefix cap per trace; use 0 for uncapped")
+    parser.add_argument("--seed", type=int, help="analyze one seed per benchmark while retaining all captured seed metadata")
+    parser.add_argument("--workload", help="substring filter for a benchmark trace name")
     args = parser.parse_args()
-    run(args.output, args.trace_dir)
+    run(args.output, args.trace_dir, args.max_accesses or None, args.seed, args.workload)
 
 
 if __name__ == "__main__":

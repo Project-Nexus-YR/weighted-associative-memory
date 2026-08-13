@@ -1,0 +1,7 @@
+*.raw
+*.trace
+*.addr
+*.txt
+*.json
+normalized/
+capture_manifest.json
