@@ -38,6 +38,7 @@ class DirectHorizonWAM(Predictor):
 
     def reset(self) -> "DirectHorizonWAM":
         self.trie = WeightedTrie(context_depth=self.context_depth)
+        self._storage_cache: dict[str, int] | None = None
         return self
 
     def fit(self, sequence: Iterable[int]) -> "DirectHorizonWAM":
@@ -55,7 +56,9 @@ class DirectHorizonWAM(Predictor):
         return [Prediction(item.address, item.confidence) for item in self.predict_horizon(context, k)]
 
     def storage_stats(self) -> dict[str, int]:
-        return self.trie.storage_stats()
+        if self._storage_cache is None:
+            self._storage_cache = self.trie.storage_stats()
+        return self._storage_cache
 
     def lookup_diagnostics(self, context: Iterable[int]) -> dict[str, float | int | bool | None]:
         return self.trie.lookup_diagnostics(context)

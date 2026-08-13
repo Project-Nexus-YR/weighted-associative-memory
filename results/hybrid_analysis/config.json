@@ -1,0 +1,55 @@
+{
+  "trace_dir": "traces/source_instrumented/loads",
+  "trace_count": 37,
+  "max_accesses": 10000,
+  "train_fraction": 0.7,
+  "train_cap": 5000,
+  "windows": [
+    100,
+    500,
+    1000,
+    5000,
+    10000,
+    50000
+  ],
+  "phase_samples_per_size": 3,
+  "primary_window": 5000,
+  "selectors": [
+    "ConfidenceSelector",
+    "RecentWinnerSelector",
+    "EntropyAwareSelector",
+    "StaticPerWorkloadOracle",
+    "WindowOracle"
+  ],
+  "selector_granularities": [
+    "per_access",
+    100,
+    1000,
+    10000
+  ],
+  "total_budgets": [
+    8192,
+    16384,
+    32768,
+    65536
+  ],
+  "splits": [
+    [
+      0.75,
+      0.25
+    ],
+    [
+      0.5,
+      0.5
+    ],
+    [
+      0.25,
+      0.75
+    ]
+  ],
+  "source_traces_only": true,
+  "gmc_label": "GMC-style",
+  "budget_trace_policy": "seed-0 representative per workload, 100-access window; core complementarity rows include every discovered seed",
+  "budget_wam_model": "HashedContextPredictor named WAM-sidecar-bounded; fixed-footprint proxy, not exact DirectWAM",
+  "per_access_note": "The simulator is replayed at finest 100-access resolution for the per_access selector proxy; it is not a cycle-exact per-access arbitration replay."
+}

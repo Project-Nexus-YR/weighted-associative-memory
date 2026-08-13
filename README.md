@@ -140,6 +140,10 @@ The experiment writes a new `results/hardware_feasibility/` directory containing
 
 The reproducible native workloads are in `benchmarks/`; build them with `scripts/build_benchmarks.sh`. `scripts/check_trace_tools.sh` reports whether Valgrind/Lackey, Intel Pin, DynamoRIO, or perf is installed, and `scripts/convert_trace.py` converts explicit external data-address records to one hexadecimal address per line. On this host no supported binary tracer was available, so `scripts/capture_source_traces.sh` provides the documented source-instrumented fallback: wrappers log actual allocated data addresses at benchmark load/store sites, with raw logs and per-trace metadata. These traces are labeled `source_instrumented`, not binary traces. The committed [real-trace report](/Users/ryanouardaoui/Documents/weighted-associative-memory/results/real_trace_evaluation/report.md) records the bounded representative results and remaining binary/cross-seed limitations.
 
+## GMC/WAM complementarity analysis
+
+`python3 -m wam.hybrid_analysis --trace-dir traces/source_instrumented/loads --output results/hybrid_analysis` audits the current GMC-style proxy before comparing it with WAM. The study uses chronological phase windows, WindowOracle and StaticPerWorkloadOracle ceilings, confidence/recent-performance/entropy selectors, disagreement analysis, direct-H16 vs H1/recursive comparisons, selector overhead, and equal-total-budget WAM-sidecar splits. The current run covers all 37 captured workload/seed traces with a bounded 10K prefix and samples up to three early/middle/late windows per measured size; the exact cap and unmeasured window sizes are recorded in `results/hybrid_analysis/config.json` and `report.md`.
+
 ## Context-sensitive experiment
 
 The important motivating trace is:

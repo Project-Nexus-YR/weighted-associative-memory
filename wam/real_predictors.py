@@ -73,10 +73,12 @@ class DeltaContextPredictor(Predictor):
         values = list(context)
         if len(values) < 2:
             return []
+        deltas = [values[index] - values[index - 1] for index in range(1, len(values))]
         lengths = [min(self.context_depth, len(values) - 1)] if self.longest_match else range(min(self.context_depth, len(values) - 1), 0, -1)
         transitions: dict[int, int] = {}
         for length in lengths:
-            transitions = self.counts.get(self._key(values, length), {})
+            key = tuple(deltas[-length:])
+            transitions = self.counts.get(key, {})
             if transitions:
                 break
         total = sum(transitions.values())
