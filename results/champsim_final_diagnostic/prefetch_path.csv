@@ -1,0 +1,11 @@
+trace,prefetch_requests_generated,prefetch_requests_accepted,prefetches_completed,prefetched_lines_demanded_later,prefetches_useful,prefetches_unused,prefetches_unused_from_json,already_cached,already_outstanding,api_rejected_or_duplicate,timeliness,native_spp_prefetch_requests,native_spp_prefetches_useful
+403.gcc-48B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,2730.0,15.0
+410.bwaves-945B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,144.0,27.0
+416.gamess-875B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,5988.0,0.0
+429.mcf-217B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,6697850.0,156742.0
+434.zeusmp-10B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,139812.0,7839.0
+435.gromacs-111B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,94127.0,67.0
+447.dealII-3B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,111081.0,3.0
+453.povray-576B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,42336.0,265.0
+454.calculix-104B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,33.0,4.0
+465.tonto-44B,0,0,0,0,0,0.0,0.0,not_exposed,not_exposed,0,not_exposed,45253.0,1.0

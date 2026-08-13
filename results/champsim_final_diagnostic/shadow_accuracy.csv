@@ -1,0 +1,11 @@
+trace,mode,horizon,depth,prediction_lookups,generated_predictions,resolved_predictions,top1_accuracy,coverage,confidence_mean,support_mean,support_max,note
+403.gcc-48B,ShadowWAM,16,4,13376,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+410.bwaves-945B,ShadowWAM,16,4,427,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+416.gamess-875B,ShadowWAM,16,4,18605,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+429.mcf-217B,ShadowWAM,16,4,1150578,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+434.zeusmp-10B,ShadowWAM,16,4,243078,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+435.gromacs-111B,ShadowWAM,16,4,204538,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+447.dealII-3B,ShadowWAM,16,4,25209,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+453.povray-576B,ShadowWAM,16,4,117763,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+454.calculix-104B,ShadowWAM,16,4,619,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued
+465.tonto-44B,ShadowWAM,16,4,31457,0,0,0.0,0.0,0.0,0.0,0,same online WAM state/update path; no additional diagnostic prefetches issued

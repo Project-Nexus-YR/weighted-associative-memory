@@ -1,0 +1,66 @@
+{
+  "diagnostic": "final WAM failure attribution",
+  "production_semantics_changed": false,
+  "event_definition": "every non-PREFETCH access callback received by the L2 WAM module",
+  "event_stream_representations": [
+    "all qualifying accesses",
+    "miss-only offline filter"
+  ],
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "chronological_split": "70% train / 30% evaluation",
+  "context_depths": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "horizons": [
+    1,
+    4,
+    8,
+    16,
+    32
+  ],
+  "current_wam_depth": 4,
+  "current_wam_horizon": 16,
+  "threshold": 8,
+  "table_entries": 256,
+  "raw_event_format": "40-byte little-endian binary records",
+  "raw_logs": "not committed; paths recorded in diagnostic_runs.csv",
+  "threshold_counterfactual": "offline confidence cuts at 0.25, 0.50, 0.75, and current discrete threshold; no production threshold changed",
+  "support_threshold": "not_applicable; current WAM has no independent support gate",
+  "native_spp_comparison": "previous fixed-window NativeSPP stats are included in activation.csv and prefetch_path.csv",
+  "exact_unavailable_metrics": [
+    "instruction distance",
+    "cache-state subdivision at prediction",
+    "duplicate versus API rejection reason",
+    "prefetch timeliness",
+    "alias replacement reason",
+    "entry lifetime"
+  ],
+  "alignment_validation": [
+    {
+      "test": "H1_alignment",
+      "status": "pass",
+      "examples": 63,
+      "note": "deterministic A,B,C,... cache-line sequence; target is exactly t+H"
+    },
+    {
+      "test": "H8_alignment",
+      "status": "pass",
+      "examples": 56,
+      "note": "deterministic A,B,C,... cache-line sequence; target is exactly t+H"
+    },
+    {
+      "test": "H16_alignment",
+      "status": "pass",
+      "examples": 48,
+      "note": "deterministic A,B,C,... cache-line sequence; target is exactly t+H"
+    }
+  ],
+  "traces": 10,
+  "classification": "C \u2014 Learning/state failure",
+  "research_decision": "RESEARCH_DECISION = CONTINUE_ONE_VARIANT"
+}

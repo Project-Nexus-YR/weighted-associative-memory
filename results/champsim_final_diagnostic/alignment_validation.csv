@@ -1,0 +1,4 @@
+test,status,examples,note
+H1_alignment,pass,63,"deterministic A,B,C,... cache-line sequence; target is exactly t+H"
+H8_alignment,pass,56,"deterministic A,B,C,... cache-line sequence; target is exactly t+H"
+H16_alignment,pass,48,"deterministic A,B,C,... cache-line sequence; target is exactly t+H"

@@ -1,0 +1,11 @@
+trace,entry_insertions,entry_evictions,entry_reuses_before_eviction,replayed_occupied_entries,replayed_insertions,replayed_evictions,replayed_reuses_before_eviction,eviction_rate_per_insertion,average_lifetime_events,reused_before_eviction_fraction,note
+403.gcc-48B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+410.bwaves-945B,202,0,0,202,202,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+416.gamess-875B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+429.mcf-217B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+434.zeusmp-10B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+435.gromacs-111B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+447.dealII-3B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+453.povray-576B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+454.calculix-104B,228,0,0,228,228,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic
+465.tonto-44B,256,0,0,256,256,0,0,0.0,not_exposed_exact,0.0,final occupancy and age-triggered replacement are replayed from the frozen DirectWAM-H16 state logic

@@ -1,0 +1,26 @@
+{
+  "trace_name": "416.gamess-875B.champsimtrace.xz",
+  "trace": "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/416.gamess-875B.champsimtrace.xz",
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "returncode": 0,
+  "status": "completed",
+  "elapsed_seconds": 210.20476865768433,
+  "json_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_final_diagnostic/runs/416.gamess-875B/stats.json",
+  "event_path": "/private/tmp/wam_final_diagnostic_raw/416.gamess-875B/events.bin",
+  "prediction_path": "/private/tmp/wam_final_diagnostic_raw/416.gamess-875B/predictions.bin",
+  "stdout_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_final_diagnostic/runs/416.gamess-875B/stdout.txt",
+  "stderr_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_final_diagnostic/runs/416.gamess-875B/stderr.txt",
+  "executable": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_wam_h16",
+  "command": [
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_wam_h16",
+    "--hide-heartbeat",
+    "--warmup-instructions",
+    "5000000",
+    "--simulation-instructions",
+    "10000000",
+    "--json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_final_diagnostic/runs/416.gamess-875B/stats.json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/416.gamess-875B.champsimtrace.xz"
+  ]
+}

@@ -1,0 +1,11 @@
+trace,table_entries,occupied_entries,prediction_lookups,hash_collisions,hash_alias_misses,alias_replacements,collision_rate,true_context_miss,note
+403.gcc-48B,256,256,13376,10611,10611,not_exposed_exact,0.7932864832535885,274,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+410.bwaves-945B,256,202,427,203,203,not_exposed_exact,0.47540983606557374,224,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+416.gamess-875B,256,256,18605,17940,17940,not_exposed_exact,0.9642569201827466,271,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+429.mcf-217B,256,256,1150578,1150304,1150304,not_exposed_exact,0.9997618588222615,267,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+434.zeusmp-10B,256,256,243078,240104,240104,not_exposed_exact,0.9877652440780326,268,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+435.gromacs-111B,256,256,204538,204211,204211,not_exposed_exact,0.9984012750686914,278,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+447.dealII-3B,256,256,25209,24920,24920,not_exposed_exact,0.9885358403744694,271,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+453.povray-576B,256,256,117763,116321,116321,not_exposed_exact,0.987755067381096,273,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+454.calculix-104B,256,228,619,382,382,not_exposed_exact,0.617124394184168,237,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
+465.tonto-44B,256,256,31457,31020,31020,not_exposed_exact,0.9861080204723909,276,hash aliases are exact lookup observations; alias replacement reason is not separately exposed
