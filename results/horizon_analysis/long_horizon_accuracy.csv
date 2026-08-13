@@ -1,0 +1,11 @@
+workload,horizon,system,accuracy,context_reuse,evaluated_accesses,storage_bytes,mode
+LongHigherOrder-100000,1,DirectWAM,1.0,1.0,29999,9672,long_accuracy_only
+LongHigherOrder-100000,4,DirectWAM,1.0,1.0,29996,9672,long_accuracy_only
+LongHigherOrder-100000,8,DirectWAM,1.0,1.0,29992,9672,long_accuracy_only
+LongHigherOrder-100000,16,DirectWAM,1.0,1.0,29984,9672,long_accuracy_only
+LongHigherOrder-100000,32,DirectWAM,1.0,1.0,29968,9672,long_accuracy_only
+LongHigherOrder-1000000,1,DirectWAM,1.0,1.0,299999,9672,long_accuracy_only
+LongHigherOrder-1000000,4,DirectWAM,1.0,1.0,299996,9672,long_accuracy_only
+LongHigherOrder-1000000,8,DirectWAM,1.0,1.0,299992,9672,long_accuracy_only
+LongHigherOrder-1000000,16,DirectWAM,1.0,1.0,299984,9672,long_accuracy_only
+LongHigherOrder-1000000,32,DirectWAM,1.0,1.0,299968,9672,long_accuracy_only

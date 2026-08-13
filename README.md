@@ -124,6 +124,10 @@ The generated report is deliberately allowed to conclude that WAM loses. In part
 
 `python -m wam.diagnostics` preserves the primary benchmark and writes a separate higher-order diagnostic set. It verifies depth-2 and depth-4 discrimination with regression tests, instruments exact/fallback/unseen context matches, measures context support and reuse, sweeps repetition density and trace lengths through one million accesses, compares WAM against flat Markov-N tables, and evaluates pruning, support-based confidence, entropy gating, and empirical context-oracle accuracy. Its `context_diagnostics.md` is a diagnostic conclusion, not an optimized headline result.
 
+## Prediction-horizon analysis
+
+`python -m wam.horizon_analysis` tests whether accurate higher-order predictions arrive early enough to overlap memory latency. It compares direct horizon WAM, recursive traversal, direct Markov-N, and perfect `Oracle-H1` through `Oracle-H32` configurations under the same hierarchy. It records lead time, slack, late/partial/fully hidden misses, compute gaps, DRAM latency, bandwidth limits, failure buckets, and long higher-order accuracy at 100K and 1M accesses. Results are isolated in `results/horizon_analysis/` so earlier evidence remains reproducible.
+
 ## Context-sensitive experiment
 
 The important motivating trace is:

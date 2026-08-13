@@ -6,7 +6,7 @@ Generated on 2026-08-13 with:
 python3 -m pytest -q --junitxml=results/pytest.xml
 ```
 
-Result: **16 passed, 0 failed, 0 skipped**.
+Result: **22 passed, 0 failed, 0 skipped**.
 
 The complete machine-readable report is in [`pytest.xml`](pytest.xml).
 
@@ -19,3 +19,5 @@ python3 -m wam.benchmark --output results --length 360 --trials 10
 See [`report.md`](report.md) for the data-derived verdict and `plots/` for the figures.
 
 The falsification phase is in [`diagnostics/context_diagnostics.md`](diagnostics/context_diagnostics.md). The original benchmark artifacts remain at the top level; the rerun after diagnostic changes is preserved separately in [`benchmark_after_diagnostics/`](benchmark_after_diagnostics/).
+
+The lead-time experiment is in [`horizon_analysis/report.md`](horizon_analysis/report.md), with separate oracle/WAM horizon, timeliness, compute-gap, DRAM, bandwidth, and failure-breakdown artifacts.
