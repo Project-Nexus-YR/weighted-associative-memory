@@ -1,0 +1,2 @@
+scope,predictor,status,paper_quality_trace,note
+all,wam_h16,not_run,False,timeliness requires paper-quality workload traces with demand/prefetch event analysis

@@ -1,0 +1,4 @@
+predictor,table_entries,entry_bytes,metadata_table_bytes,bounded_queue_entries,declared_fixed_state_bytes,status,note
+baseline,0,0,0,0,0,native_baseline,no prefetcher state
+wam_h16,256,32,8192,16,8448,compiled,8 KiB table plus fixed delayed-training queue accounting
+spp_dev,n/a,n/a,n/a,n/a,n/a,native_module,not audited into the WAM fixed-budget ledger

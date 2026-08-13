@@ -1,0 +1,2 @@
+scope,selector,status,paper_quality_trace,note
+all,hybrid_oracle,not_run,False,requires paper-quality traces and at least two evaluated predictor streams

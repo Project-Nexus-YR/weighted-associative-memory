@@ -1,0 +1,50 @@
+{
+  "platform": "ChampSim",
+  "revision": "51588e1d6f97875fe8de1a3621d28668bff83fcf",
+  "trace": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/smoke_input.champsimtrace",
+  "warmup_instructions": 1000,
+  "simulation_instructions": 10000,
+  "commands": {
+    "baseline": [
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim",
+      "--hide-heartbeat",
+      "--warmup-instructions",
+      "1000",
+      "--simulation-instructions",
+      "10000",
+      "--json",
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/baseline.json",
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/smoke_input.champsimtrace"
+    ],
+    "wam_h16": [
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_wam_h16",
+      "--hide-heartbeat",
+      "--warmup-instructions",
+      "1000",
+      "--simulation-instructions",
+      "10000",
+      "--json",
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/wam_h16.json",
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/smoke_input.champsimtrace"
+    ],
+    "spp_dev": [
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_spp_dev",
+      "--hide-heartbeat",
+      "--warmup-instructions",
+      "1000",
+      "--simulation-instructions",
+      "10000",
+      "--json",
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/spp_dev.json",
+      "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/smoke_input.champsimtrace"
+    ]
+  },
+  "predictors": [
+    "baseline",
+    "wam_h16",
+    "spp_dev"
+  ],
+  "status": "smoke_completed",
+  "paper_quality_trace": false,
+  "reason": "deterministic synthetic instruction-level format smoke trace"
+}

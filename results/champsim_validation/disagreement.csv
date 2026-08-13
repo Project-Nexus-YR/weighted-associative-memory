@@ -1,0 +1,2 @@
+scope,predictor_a,predictor_b,status,paper_quality_trace,note
+all,wam_h16,spp_dev,not_run,False,smoke trace has no meaningful predictor disagreement

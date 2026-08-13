@@ -1,0 +1,4 @@
+scope,predictor,workloads,paper_quality_trace,status,mean_ipc,mean_l2_mpki
+smoke,baseline,1,False,not_for_claim,0.9100837277029487,59.7
+smoke,wam_h16,1,False,not_for_claim,0.9100837277029487,59.7
+smoke,spp_dev,1,False,not_for_claim,0.9100837277029487,59.7

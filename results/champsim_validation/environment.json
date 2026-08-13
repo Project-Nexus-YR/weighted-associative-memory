@@ -1,0 +1,32 @@
+{
+  "platform": "macOS-15.5-arm64-arm-64bit",
+  "machine": "arm64",
+  "python": "Python 3.12.7",
+  "compiler": "Apple clang version 17.0.0 (clang-1700.0.13.5)",
+  "champsim_commit": "51588e1d6f97875fe8de1a3621d28668bff83fcf",
+  "vcpkg_commit": "6d7bf7ef2193e2d1c5798a5ff8811d533104c861",
+  "expected_vcpkg_commit": "6d7bf7ef2193e2d1c5798a5ff8811d533104c861",
+  "source_config": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/champsim_config.json",
+  "configs": {
+    "baseline": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/baseline_config.json",
+    "wam_h16": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/wam_h16_config.json",
+    "spp_dev": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/spp_dev_config.json"
+  },
+  "include": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/vcpkg_installed/arm64-osx/include",
+  "library": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/vcpkg_installed/arm64-osx/lib",
+  "build_flags": [
+    "C++17",
+    "-O3",
+    "-Wall",
+    "-Wextra",
+    "-Wshadow",
+    "-Wpedantic",
+    "-Wconversion"
+  ],
+  "executables": {
+    "baseline": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim",
+    "wam_h16": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_wam_h16",
+    "spp_dev": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_spp_dev"
+  },
+  "status": "built"
+}

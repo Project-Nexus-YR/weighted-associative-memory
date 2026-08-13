@@ -1,0 +1,2 @@
+workload,trace,format,has_pcs,paper_quality_trace,status,notes
+synthetic_smoke,/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_validation/smoke/smoke_input.champsimtrace,ChampSim input_instr native 64-byte,True,False,smoke_completed,deterministic format/build check only; no legal public workload claim

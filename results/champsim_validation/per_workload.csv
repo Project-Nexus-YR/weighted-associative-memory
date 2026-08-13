@@ -1,0 +1,4 @@
+predictor,workload,status,paper_quality_trace,instructions,cycles,ipc,l2_rfo_misses,l2_mpki,prefetch_issued,useful_prefetch,useless_prefetch
+baseline,synthetic_smoke,smoke_only,False,10000,10988,0.9100837277029487,597,59.7,0,0,0
+wam_h16,synthetic_smoke,smoke_only,False,10000,10988,0.9100837277029487,597,59.7,0,0,0
+spp_dev,synthetic_smoke,smoke_only,False,10000,10988,0.9100837277029487,597,59.7,0,0,0
