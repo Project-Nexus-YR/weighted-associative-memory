@@ -1,0 +1,25 @@
+{
+  "trace_name": "434.zeusmp-10B.champsimtrace.xz",
+  "predictor": "Hybrid-SPP+WAM",
+  "trace": "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/434.zeusmp-10B.champsimtrace.xz",
+  "executable": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_hybrid_spp_wam",
+  "command": [
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_hybrid_spp_wam",
+    "--hide-heartbeat",
+    "--warmup-instructions",
+    "5000000",
+    "--simulation-instructions",
+    "10000000",
+    "--json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/434.zeusmp-10B/Hybrid-SPP_WAM/stats.json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/434.zeusmp-10B.champsimtrace.xz"
+  ],
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "returncode": 0,
+  "elapsed_seconds": 250.2758457660675,
+  "status": "completed",
+  "json_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/434.zeusmp-10B/Hybrid-SPP_WAM/stats.json",
+  "stdout_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/434.zeusmp-10B/Hybrid-SPP_WAM/stdout.txt",
+  "stderr_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/434.zeusmp-10B/Hybrid-SPP_WAM/stderr.txt"
+}

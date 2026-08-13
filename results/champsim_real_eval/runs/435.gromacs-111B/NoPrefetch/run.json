@@ -1,0 +1,25 @@
+{
+  "trace_name": "435.gromacs-111B.champsimtrace.xz",
+  "predictor": "NoPrefetch",
+  "trace": "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/435.gromacs-111B.champsimtrace.xz",
+  "executable": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim",
+  "command": [
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim",
+    "--hide-heartbeat",
+    "--warmup-instructions",
+    "5000000",
+    "--simulation-instructions",
+    "10000000",
+    "--json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/435.gromacs-111B/NoPrefetch/stats.json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/435.gromacs-111B.champsimtrace.xz"
+  ],
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "returncode": 0,
+  "elapsed_seconds": 234.3245975971222,
+  "status": "completed",
+  "json_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/435.gromacs-111B/NoPrefetch/stats.json",
+  "stdout_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/435.gromacs-111B/NoPrefetch/stdout.txt",
+  "stderr_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/435.gromacs-111B/NoPrefetch/stderr.txt"
+}

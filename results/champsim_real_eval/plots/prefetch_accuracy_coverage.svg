@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+<style>text{font-family:Arial,sans-serif;fill:#243447} .small{font-size:12px} .title{font-size:20px;font-weight:bold}</style>
+<text x="90" y="30" class="title">Mean prefetch accuracy</text>
+<text x="15" y="232.5" transform="rotate(-90 15 232.5)" class="small">accuracy</text>
+<line x1="90" y1="400.0" x2="1070" y2="400.0" stroke="#52606d"/>
+<rect x="117.4" y="400.0" width="141.1" height="1.0" fill="#2f80ed"/>
+<text x="188.0" y="395.0" text-anchor="middle" class="small">0.000</text>
+<text x="188.0" y="455" transform="rotate(-45 188.0 455)" text-anchor="end" class="small">NoPrefetch</text>
+<rect x="313.4" y="329.9" width="141.1" height="70.1" fill="#2f80ed"/>
+<text x="384.0" y="324.9" text-anchor="middle" class="small">0.040</text>
+<text x="384.0" y="455" transform="rotate(-45 384.0 455)" text-anchor="end" class="small">NativeSPP</text>
+<rect x="509.4" y="65.0" width="141.1" height="335.0" fill="#2f80ed"/>
+<text x="580.0" y="60.0" text-anchor="middle" class="small">0.193</text>
+<text x="580.0" y="455" transform="rotate(-45 580.0 455)" text-anchor="end" class="small">NativeIPStride</text>
+<rect x="705.4" y="400.0" width="141.1" height="1.0" fill="#2f80ed"/>
+<text x="776.0" y="395.0" text-anchor="middle" class="small">0.000</text>
+<text x="776.0" y="455" transform="rotate(-45 776.0 455)" text-anchor="end" class="small">WAM-H16</text>
+<rect x="901.4" y="329.9" width="141.1" height="70.1" fill="#2f80ed"/>
+<text x="972.0" y="324.9" text-anchor="middle" class="small">0.040</text>
+<text x="972.0" y="455" transform="rotate(-45 972.0 455)" text-anchor="end" class="small">Hybrid-SPP+WAM</text>
+</svg>

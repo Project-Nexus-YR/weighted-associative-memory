@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "champsim_commit": "51588e1d6f97875fe8de1a3621d28668bff83fcf",
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "workers": 4,
+  "predictors": [
+    "NoPrefetch",
+    "NativeSPP",
+    "NativeIPStride",
+    "WAM-H16",
+    "Hybrid-SPP+WAM"
+  ],
+  "traces": 10,
+  "jobs_requested_this_invocation": 50,
+  "completed_records": 50
+}

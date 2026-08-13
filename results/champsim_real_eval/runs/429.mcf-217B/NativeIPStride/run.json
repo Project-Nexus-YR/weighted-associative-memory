@@ -1,0 +1,25 @@
+{
+  "trace_name": "429.mcf-217B.champsimtrace.xz",
+  "predictor": "NativeIPStride",
+  "trace": "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/429.mcf-217B.champsimtrace.xz",
+  "executable": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_ip_stride",
+  "command": [
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_ip_stride",
+    "--hide-heartbeat",
+    "--warmup-instructions",
+    "5000000",
+    "--simulation-instructions",
+    "10000000",
+    "--json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/429.mcf-217B/NativeIPStride/stats.json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/429.mcf-217B.champsimtrace.xz"
+  ],
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "returncode": 0,
+  "elapsed_seconds": 976.3279452323914,
+  "status": "completed",
+  "json_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/429.mcf-217B/NativeIPStride/stats.json",
+  "stdout_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/429.mcf-217B/NativeIPStride/stdout.txt",
+  "stderr_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/429.mcf-217B/NativeIPStride/stderr.txt"
+}

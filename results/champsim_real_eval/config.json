@@ -1,0 +1,237 @@
+{
+  "evaluation": "ChampSim native real-trace evaluation",
+  "created_on": "2026-08-13",
+  "platform": "macOS-15.5-arm64-arm-64bit",
+  "machine": "arm64",
+  "champsim_commit": "51588e1d6f97875fe8de1a3621d28668bff83fcf",
+  "vcpkg_commit": "6d7bf7ef2193e2d1c5798a5ff8811d533104c861",
+  "base_config_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/champsim_config.json",
+  "base_config": {
+    "executable_name": "champsim",
+    "block_size": 64,
+    "page_size": 4096,
+    "heartbeat_frequency": 10000000,
+    "num_cores": 1,
+    "ooo_cpu": [
+      {
+        "frequency": 4000,
+        "ifetch_buffer_size": 64,
+        "decode_buffer_size": 32,
+        "dispatch_buffer_size": 32,
+        "register_file_size": 128,
+        "rob_size": 352,
+        "lq_size": 128,
+        "sq_size": 72,
+        "fetch_width": 6,
+        "decode_width": 6,
+        "dispatch_width": 6,
+        "execute_width": 4,
+        "lq_width": 2,
+        "sq_width": 2,
+        "retire_width": 5,
+        "mispredict_penalty": 1,
+        "scheduler_size": 128,
+        "decode_latency": 1,
+        "dispatch_latency": 1,
+        "schedule_latency": 0,
+        "execute_latency": 0,
+        "branch_predictor": "bimodal",
+        "btb": "basic_btb"
+      }
+    ],
+    "DIB": {
+      "window_size": 16,
+      "sets": 32,
+      "ways": 8
+    },
+    "L1I": {
+      "sets": 64,
+      "ways": 8,
+      "rq_size": 64,
+      "wq_size": 64,
+      "pq_size": 32,
+      "mshr_size": 8,
+      "latency": 4,
+      "max_tag_check": 2,
+      "max_fill": 2,
+      "prefetch_as_load": false,
+      "virtual_prefetch": true,
+      "prefetch_activate": "LOAD,PREFETCH",
+      "prefetcher": "no"
+    },
+    "L1D": {
+      "sets": 64,
+      "ways": 12,
+      "rq_size": 64,
+      "wq_size": 64,
+      "pq_size": 8,
+      "mshr_size": 16,
+      "latency": 5,
+      "max_tag_check": 2,
+      "max_fill": 2,
+      "prefetch_as_load": false,
+      "virtual_prefetch": false,
+      "prefetch_activate": "LOAD,PREFETCH",
+      "prefetcher": "no"
+    },
+    "L2C": {
+      "sets": 1024,
+      "ways": 8,
+      "rq_size": 32,
+      "wq_size": 32,
+      "pq_size": 16,
+      "mshr_size": 32,
+      "latency": 10,
+      "max_tag_check": 1,
+      "max_fill": 1,
+      "prefetch_as_load": false,
+      "virtual_prefetch": false,
+      "prefetch_activate": "LOAD,PREFETCH",
+      "prefetcher": "no"
+    },
+    "ITLB": {
+      "sets": 16,
+      "ways": 4,
+      "rq_size": 16,
+      "wq_size": 16,
+      "pq_size": 0,
+      "mshr_size": 8,
+      "latency": 1,
+      "max_tag_check": 2,
+      "max_fill": 2,
+      "prefetch_as_load": false
+    },
+    "DTLB": {
+      "sets": 16,
+      "ways": 4,
+      "rq_size": 16,
+      "wq_size": 16,
+      "pq_size": 0,
+      "mshr_size": 8,
+      "latency": 1,
+      "max_tag_check": 2,
+      "max_fill": 2,
+      "prefetch_as_load": false
+    },
+    "STLB": {
+      "sets": 128,
+      "ways": 12,
+      "rq_size": 32,
+      "wq_size": 32,
+      "pq_size": 0,
+      "mshr_size": 16,
+      "latency": 8,
+      "max_tag_check": 1,
+      "max_fill": 1,
+      "prefetch_as_load": false
+    },
+    "PTW": {
+      "pscl5_set": 1,
+      "pscl5_way": 2,
+      "pscl4_set": 1,
+      "pscl4_way": 4,
+      "pscl3_set": 2,
+      "pscl3_way": 4,
+      "pscl2_set": 4,
+      "pscl2_way": 8,
+      "rq_size": 16,
+      "mshr_size": 5,
+      "max_read": 2,
+      "max_write": 2
+    },
+    "LLC": {
+      "frequency": 4000,
+      "sets": 2048,
+      "ways": 16,
+      "rq_size": 32,
+      "wq_size": 32,
+      "pq_size": 32,
+      "mshr_size": 64,
+      "latency": 20,
+      "max_tag_check": 1,
+      "max_fill": 1,
+      "prefetch_as_load": false,
+      "virtual_prefetch": false,
+      "prefetch_activate": "LOAD,PREFETCH",
+      "prefetcher": "no",
+      "replacement": "lru"
+    },
+    "physical_memory": {
+      "data_rate": 3200,
+      "channels": 1,
+      "ranks": 1,
+      "bankgroups": 8,
+      "banks": 4,
+      "bank_rows": 65536,
+      "bank_columns": 1024,
+      "channel_width": 8,
+      "wq_size": 64,
+      "rq_size": 64,
+      "tCAS": 24,
+      "tRCD": 24,
+      "tRP": 24,
+      "tRAS": 52,
+      "refresh_period": 32,
+      "refreshes_per_period": 8192
+    },
+    "virtual_memory": {
+      "pte_page_size": 4096,
+      "num_levels": 5,
+      "minor_fault_penalty": 200,
+      "randomization": 1
+    }
+  },
+  "core_count": 1,
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "trace_source": "https://zenodo.org/records/10959705",
+  "trace_format": "native ChampSim input_instr .champsimtrace.xz",
+  "predictors": {
+    "NoPrefetch": {
+      "binary": "champsim",
+      "role": "negative_control",
+      "state_bytes": 0
+    },
+    "NativeSPP": {
+      "binary": "champsim_spp_dev",
+      "role": "strong_native_candidate",
+      "state_bytes": "native_unbounded_audit_separate"
+    },
+    "NativeIPStride": {
+      "binary": "champsim_ip_stride",
+      "role": "additional_native_candidate",
+      "state_bytes": "native_unbounded_audit_separate"
+    },
+    "WAM-H16": {
+      "binary": "champsim_wam_h16",
+      "role": "primary_fixed_direct_wam",
+      "state_bytes": 8448
+    },
+    "Hybrid-SPP+WAM": {
+      "binary": "champsim_hybrid_spp_wam",
+      "role": "cheap_online_selector",
+      "state_bytes": "native_spp_plus_8448"
+    }
+  },
+  "primary_predictor": "WAM-H16",
+  "strong_baseline_candidates": [
+    "NativeSPP",
+    "NativeIPStride"
+  ],
+  "headline_budget_bytes": 32768,
+  "budget_points_bytes": [
+    16384,
+    32768,
+    65536
+  ],
+  "wam_fixed_state_bytes": 8448,
+  "storage_fairness": "WAM ledger is fixed and auditable; canonical native predictors are reported separately because their pre-existing module state is not redesigned or truncated for this experiment.",
+  "memory_intensity_rule": "memory-bound if NoPrefetch baseline LLC demand MPKI >= 10; regular/irregular group comes from the frozen manifest class.",
+  "regression_guard": "WAM or Hybrid regression is any IPC speedup below 0.98x versus NoPrefetch; headline success requires >=1.02x geomean and no regression worse than -2% on the target group.",
+  "online_hybrid_rule": "Native SPP runs first. DirectWAM-H16 sidecar is enabled while recent primary usefulness is below 5% after a 64-demand minimum; the selector uses only observed callbacks in a 1024-demand bounded window.",
+  "known_measurement_limits": [
+    "ChampSim JSON exposes aggregate prefetch counts, not predicted-address streams; address-level overlap/disagreement and exact late/pollution counts are not claimed.",
+    "The primary run is fixed and laptop-bounded at 5M warmup plus 10M simulation instructions per trace.",
+    "One-million-instruction oracle windows and Direct-vs-RecursiveWAM are recorded as not run because no native RecursiveWAM implementation is present and standard JSON has no window event stream."
+  ]
+}

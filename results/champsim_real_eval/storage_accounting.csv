@@ -1,0 +1,8 @@
+predictor,budget_point_bytes,declared_state_bytes,object_size_bytes,budget_fit,accounting_basis
+NoPrefetch,0,0,0,yes,no prefetcher state
+WAM-H16,16384,8448,8344,yes,256 x 32-byte entries + 16 x 16-byte pending contexts; sizeof object excludes deque payload capacity
+WAM-H16,32768,8448,8344,yes,256 x 32-byte entries + 16 x 16-byte pending contexts; sizeof object excludes deque payload capacity
+WAM-H16,65536,8448,8344,yes,256 x 32-byte entries + 16 x 16-byte pending contexts; sizeof object excludes deque payload capacity
+NativeSPP,canonical,native_module,51840,separate,canonical native comparator; no WAM redesign
+NativeIPStride,canonical,native_module,104,separate,canonical native comparator; no WAM redesign
+Hybrid-SPP+WAM,canonical,native_spp_plus_8448,60224,separate,online sidecar composed with native SPP; sizeof object includes embedded SPP and WAM objects

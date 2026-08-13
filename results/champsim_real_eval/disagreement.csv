@@ -1,0 +1,11 @@
+workload,predictor_a,predictor_b,metric,a_value,b_value,relative_difference,status,note
+403.gcc-48B,WAM-H16,NativeSPP,IPC,2.451586568446322,2.4976240107537677,-0.018432495087021605,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+410.bwaves-945B,WAM-H16,NativeSPP,IPC,3.031084976433324,3.0400221799929534,-0.0029398481427034273,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+416.gamess-875B,WAM-H16,NativeSPP,IPC,1.7319631195773317,1.7372629526416907,-0.0030506798388234557,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+429.mcf-217B,WAM-H16,NativeSPP,IPC,0.08593534893144238,0.23584219671280415,-0.6356235222991509,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+434.zeusmp-10B,WAM-H16,NativeSPP,IPC,1.4847803334311804,1.5951217349054427,-0.06917428247619184,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+435.gromacs-111B,WAM-H16,NativeSPP,IPC,1.6945194834155684,1.7021919807012282,-0.004507421825885483,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+447.dealII-3B,WAM-H16,NativeSPP,IPC,1.4346305690733594,1.4363002406951462,-0.0011624809176239426,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+453.povray-576B,WAM-H16,NativeSPP,IPC,1.5380970449928717,1.5625770643398855,-0.0156664396948355,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+454.calculix-104B,WAM-H16,NativeSPP,IPC,2.1095869112802763,2.1104639960154445,-0.0004155885799634884,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.
+465.tonto-44B,WAM-H16,NativeSPP,IPC,1.8028572041542879,1.8079981862162195,-0.002843466382392079,performance_disagreement,Address-level prediction overlap is unavailable in aggregate JSON.

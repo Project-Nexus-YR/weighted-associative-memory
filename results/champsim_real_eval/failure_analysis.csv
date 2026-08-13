@@ -1,0 +1,11 @@
+workload,workload_class,wam_speedup_vs_NoPrefetch,wam_increment_over_StrongBaseline,strong_baseline,wam_regression_guard,diagnosis,measurement_note
+403.gcc-48B,control/compute,1.0,-0.018432495087021605,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+410.bwaves-945B,irregular/memory-bound,1.0,-0.0029398481427034273,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+416.gamess-875B,irregular/scientific,1.0,-0.0030506798388234557,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+429.mcf-217B,irregular/pointer-heavy,1.0,-0.6356235222991509,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+434.zeusmp-10B,irregular/scientific,1.0,-0.06917428247619184,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+435.gromacs-111B,regular/scientific,1.0,-0.004507421825885483,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+447.dealII-3B,irregular/tree/index-like,1.0,-0.0011624809176239426,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+453.povray-576B,control/compute,1.0,-0.0156664396948355,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+454.calculix-104B,irregular/scientific,1.0,-0.0004155885799634884,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.
+465.tonto-44B,control/compute,1.0,-0.002843466382392079,NativeSPP,pass,WAM below strong native,Diagnosis is performance-level only; aggregate JSON cannot identify address-level pollution or lateness.

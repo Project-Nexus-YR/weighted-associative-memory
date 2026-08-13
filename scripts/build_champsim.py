@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build pinned ChampSim baseline, DirectWAM-H16, and SPP smoke binaries."""
+"""Build the pinned ChampSim evaluation binaries."""
 
 from __future__ import annotations
 
@@ -36,6 +36,8 @@ def write_configs(validation: Path, baseline: dict) -> dict[str, Path]:
         "baseline": baseline,
         "wam_h16": {**baseline, "executable_name": "champsim_wam_h16", "L2C": {**baseline["L2C"], "prefetcher": "wam_h16"}},
         "spp_dev": {**baseline, "executable_name": "champsim_spp_dev", "L2C": {**baseline["L2C"], "prefetcher": "spp_dev"}},
+        "ip_stride": {**baseline, "executable_name": "champsim_ip_stride", "L2C": {**baseline["L2C"], "prefetcher": "ip_stride"}},
+        "hybrid_spp_wam": {**baseline, "executable_name": "champsim_hybrid_spp_wam", "L2C": {**baseline["L2C"], "prefetcher": "hybrid_spp_wam"}},
     }
     paths = {}
     for name, config in configs.items():
@@ -45,7 +47,7 @@ def write_configs(validation: Path, baseline: dict) -> dict[str, Path]:
     return paths
 
 
-def build_one(root: Path, config: Path, executable_name: str, include: Path, lib: Path, prefetcher_dir: Path | None) -> None:
+def build_one(root: Path, config: Path, executable_name: str, include: Path, lib: Path, prefetcher_dir: Path | None, extra_includes: list[Path] | None = None) -> None:
     # ChampSim's generated environment is configuration-specific. Clean the
     # generated object/configuration graph between binaries so a prior target
     # cannot be linked with a different build hash.
@@ -55,13 +57,16 @@ def build_one(root: Path, config: Path, executable_name: str, include: Path, lib
         configure += ["--prefetcher-dir", str(prefetcher_dir)]
     configure += [str(config)]
     run(configure, root)
+    include_flags = [f"-I.csconfig -I{include}"]
+    if extra_includes:
+        include_flags.append(" ".join(f"-I{path}" for path in extra_includes))
     run(
         [
             "make",
             "-j1",
             f"bin/{executable_name}",
             "SKIP_CHAMPSIM_TEST_DEPS=1",
-            f"CPPFLAGS=-I.csconfig -I{include}",
+            f"CPPFLAGS={' '.join(include_flags)}",
             f"LDFLAGS=-L{lib} -L{lib / 'manual-link'}",
         ],
         root,
@@ -102,9 +107,12 @@ def main() -> None:
     baseline = json.loads(args.config.read_text(encoding="utf-8"))
     config_paths = write_configs(validation, baseline)
     prefetcher_dir = ROOT / "champsim/prefetcher"
+    extra_includes = [prefetcher_dir / "wam_h16", root / "prefetcher/spp_dev"]
     build_one(root, config_paths["baseline"], "champsim", include, lib, None)
     build_one(root, config_paths["wam_h16"], "champsim_wam_h16", include, lib, prefetcher_dir)
     build_one(root, config_paths["spp_dev"], "champsim_spp_dev", include, lib, None)
+    build_one(root, config_paths["ip_stride"], "champsim_ip_stride", include, lib, None)
+    build_one(root, config_paths["hybrid_spp_wam"], "champsim_hybrid_spp_wam", include, lib, prefetcher_dir, extra_includes)
     environment = {
         "platform": platform.platform(),
         "machine": platform.machine(),
@@ -118,7 +126,7 @@ def main() -> None:
         "include": str(include),
         "library": str(lib),
         "build_flags": ["C++17", "-O3", "-Wall", "-Wextra", "-Wshadow", "-Wpedantic", "-Wconversion"],
-        "executables": {name: str(root / "bin" / executable) for name, executable in {"baseline": "champsim", "wam_h16": "champsim_wam_h16", "spp_dev": "champsim_spp_dev"}.items()},
+        "executables": {name: str(root / "bin" / executable) for name, executable in {"baseline": "champsim", "wam_h16": "champsim_wam_h16", "spp_dev": "champsim_spp_dev", "ip_stride": "champsim_ip_stride", "hybrid_spp_wam": "champsim_hybrid_spp_wam"}.items()},
         "status": "built",
     }
     (validation / "environment.json").write_text(json.dumps(environment, indent=2) + "\n", encoding="utf-8")

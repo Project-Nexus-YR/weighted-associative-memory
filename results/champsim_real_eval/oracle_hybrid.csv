@@ -1,0 +1,3 @@
+scope,window_instructions,status,trace_level_ceiling_geomean_vs_NoPrefetch,oracle_increment_over_StrongBaseline,note
+all,1000000,not_run,1.119697916019281,0.0,Trace-level ceiling is shown for context; a 1M-window oracle requires windowed event statistics not emitted by this ChampSim JSON path.
+irregular,1000000,not_run,1.1989804127646801,0.0,Trace-level ceiling is shown for context; a 1M-window oracle requires windowed event statistics not emitted by this ChampSim JSON path.

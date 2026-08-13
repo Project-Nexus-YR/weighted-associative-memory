@@ -1,0 +1,25 @@
+{
+  "trace_name": "447.dealII-3B.champsimtrace.xz",
+  "predictor": "NativeSPP",
+  "trace": "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/447.dealII-3B.champsimtrace.xz",
+  "executable": "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_spp_dev",
+  "command": [
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/external/champsim/bin/champsim_spp_dev",
+    "--hide-heartbeat",
+    "--warmup-instructions",
+    "5000000",
+    "--simulation-instructions",
+    "10000000",
+    "--json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/447.dealII-3B/NativeSPP/stats.json",
+    "/Users/ryanouardaoui/Documents/weighted-associative-memory/traces/champsim_public/spec2006/447.dealII-3B.champsimtrace.xz"
+  ],
+  "warmup_instructions": 5000000,
+  "simulation_instructions": 10000000,
+  "returncode": 0,
+  "elapsed_seconds": 259.7615020275116,
+  "status": "completed",
+  "json_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/447.dealII-3B/NativeSPP/stats.json",
+  "stdout_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/447.dealII-3B/NativeSPP/stdout.txt",
+  "stderr_path": "/Users/ryanouardaoui/Documents/weighted-associative-memory/results/champsim_real_eval/runs/447.dealII-3B/NativeSPP/stderr.txt"
+}

@@ -1,0 +1,10 @@
+dimension,horizon,budget_bytes,predictor,status,geomean_speedup,note
+horizon_and_budget,8,16384,WAM-H8,not_run,,limited sensitivity deferred until after the fixed H16 primary
+horizon_and_budget,8,32768,WAM-H8,not_run,,limited sensitivity deferred until after the fixed H16 primary
+horizon_and_budget,8,65536,WAM-H8,not_run,,limited sensitivity deferred until after the fixed H16 primary
+horizon_and_budget,16,16384,WAM-H16,measured,1.0,primary DirectWAM configuration
+horizon_and_budget,16,32768,WAM-H16,measured,1.0,primary DirectWAM configuration
+horizon_and_budget,16,65536,WAM-H16,measured,1.0,primary DirectWAM configuration
+horizon_and_budget,32,16384,WAM-H32,not_run,,limited sensitivity deferred until after the fixed H16 primary
+horizon_and_budget,32,32768,WAM-H32,not_run,,limited sensitivity deferred until after the fixed H16 primary
+horizon_and_budget,32,65536,WAM-H32,not_run,,limited sensitivity deferred until after the fixed H16 primary

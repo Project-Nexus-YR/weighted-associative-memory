@@ -1,0 +1,5 @@
+scope,selector,predictor,strong_baseline,workloads,geomean_speedup_vs_NoPrefetch,geomean_speedup_vs_StrongBaseline,worst_speedup,regressions_below_0_98,status,note
+all,SPP-primary/WAM-sidecar-usefulness-5pct,Hybrid-SPP+WAM,NativeSPP,10,1.119697916019281,1.0,1.000415761365639,0,measured,online selector; sidecar counters are recorded per workload
+irregular,SPP-primary/WAM-sidecar-usefulness-5pct,Hybrid-SPP+WAM,NativeSPP,6,1.1989804127646801,1.0,1.000415761365639,0,measured,online selector; sidecar counters are recorded per workload
+regular,SPP-primary/WAM-sidecar-usefulness-5pct,Hybrid-SPP+WAM,NativeSPP,4,1.010494705450398,1.0,1.0028515747393,0,measured,online selector; sidecar counters are recorded per workload
+memory-bound,SPP-primary/WAM-sidecar-usefulness-5pct,Hybrid-SPP+WAM,NativeSPP,1,2.7444142561282283,1.0,2.7444142561282283,0,measured,online selector; sidecar counters are recorded per workload
