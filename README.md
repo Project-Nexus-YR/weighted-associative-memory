@@ -134,6 +134,12 @@ The generated report is deliberately allowed to conclude that WAM loses. In part
 
 The experiment writes a new `results/hardware_feasibility/` directory containing latency, throughput, overlap, architecture, storage-budget, counter-width, hash-collision, update, batching, energy, tolerance, and microarchitecture CSVs, a feasibility matrix, plots, `config.json`, and a data-derived `report.md`. `IdealWAM` is a zero-cost direct-WAM upper bound; `Oracle` is reported separately and is not treated as implementable hardware. Hash-table replacement is approximated by deterministic bucket aliasing, and energy values are normalized comparative units rather than silicon estimates.
 
+## Real-trace evaluation
+
+`python3 -m wam.real_trace_evaluation --trace-dir traces --output results/real_trace_evaluation` is the next comparative phase. It consumes only externally captured data-address traces and compares DirectWAM-H8/H16/H32, bounded hashed contexts, recursive WAM, Markov-N, VLDP-style delta history, SPP-style recursive paths, GMC-style multi-order deltas, stride, next-line, and a simple hybrid under chronological splits and equal 2–64 KB budgets. It records context entropy/reuse, direct-horizon oracle opportunity, phase stability, miss-only training, storage/latency costs, and the requested predictor result tables and plots.
+
+The reproducible native workloads are in `benchmarks/`; build them with `scripts/build_benchmarks.sh`. `scripts/check_trace_tools.sh` reports whether Valgrind/Lackey, Intel Pin, DynamoRIO, or perf is installed, and `scripts/convert_trace.py` converts explicit external data-address records to one hexadecimal address per line. Running a benchmark binary alone is never treated as a real trace. In the current environment no supported tracer or captured trace was available, so `results/real_trace_evaluation/report.md` records the phase as pending rather than fabricating a real-workload conclusion.
+
 ## Context-sensitive experiment
 
 The important motivating trace is:

@@ -1,0 +1,1 @@
+workload,category,predictor,horizon,budget_bytes,train_fraction,accuracy,prefetch_precision,coverage,late_prefetch_rate,mean_lead_time,mean_slack,cache_pollution,bandwidth_bytes,average_memory_latency,total_cycles,speedup,cycles_hidden,predictor_overhead,storage_bytes,fraction_of_ideal_gain

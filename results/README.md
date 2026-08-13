@@ -6,7 +6,7 @@ Generated on 2026-08-13 with:
 python3 -m pytest -q --junitxml=results/pytest.xml
 ```
 
-Result: **25 passed, 0 failed, 0 skipped**.
+Result: **28 passed, 0 failed, 0 skipped**.
 
 The complete machine-readable report is in [`pytest.xml`](pytest.xml).
 
@@ -23,3 +23,5 @@ The falsification phase is in [`diagnostics/context_diagnostics.md`](diagnostics
 The lead-time experiment is in [`horizon_analysis/report.md`](horizon_analysis/report.md), with separate oracle/WAM horizon, timeliness, compute-gap, DRAM, bandwidth, and failure-breakdown artifacts.
 
 The hardware-realism phase is in [`hardware_feasibility/report.md`](hardware_feasibility/report.md). It preserves the earlier result directories and adds explicit predictor latency/throughput, overlap, pipelining, queue/port pressure, bounded hashed storage, counter quantization, update batching, signature compression, prediction caching, fallback/candidate cost, energy proxy, tolerance, and feasibility-matrix artifacts.
+
+The real-trace phase is in [`real_trace_evaluation/report.md`](real_trace_evaluation/report.md). It contains the external-trace evaluator, equal-budget comparative schema, native benchmark/capture workflow references, and an explicit no-fabrication status when no supported tracer or captured trace is available.

@@ -1,0 +1,2 @@
+#include "bench_common.h"
+int main(int argc,char **argv){size_t n=wam_size(argc,argv,1<<16); size_t *q=malloc(n*sizeof(*q)); uint32_t *seen=calloc(n,sizeof(*seen)); if(!q||!seen)return 1; size_t head=0,tail=0;q[tail++]=0;seen[0]=1;uint64_t s=0;while(head<tail){size_t v=q[head++];s^=v;for(size_t e=0;e<8;e++){size_t w=(v*1103515245ULL+e*97+17)%n;if(!seen[w]){seen[w]=1;q[tail++]=w;}}}wam_finish(s);free(q);free(seen);}
