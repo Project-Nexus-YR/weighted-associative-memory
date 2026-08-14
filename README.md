@@ -4,6 +4,30 @@ Weighted Associative Memory (WAM) is an experimental software prototype for test
 
 This is a research simulator, not a hardware design and not a claim of a novel invention.
 
+## Final research result
+
+The native ChampSim evaluation is complete. The final authorized follow-up replaced the 256-entry direct-mapped WAM table with a 64-set × 4-way set-associative table, preserving 256 total entries, H16 alignment, the confidence threshold, the hash function, the prefetch policy, and the fixed 5M-instruction warmup / 10M-instruction simulation window.
+
+The result was negative:
+
+| Metric | DirectMappedWAM | SetAssociativeWAM |
+|---|---:|---:|
+| Logical state bytes | 8,448 | 8,512 |
+| Context hit rate | 0.387% | 0.189% |
+| Shadow H16 accuracy | 0.000% | 0.000% |
+| Shadow H16 coverage | 0.000% | 0.000% |
+| Geomean IPC speedup | 1.000× | 1.000× |
+
+Across ten native traces, the chronological H16 oracle reached 32.616% accuracy with 37.526% coverage, but neither online WAM variant generated a prediction. Four-way associativity did not recover the lost state: unresolved all-ways conflict loss was 99.662%, compared with 99.466% direct-map alias loss. NativeSPP reached 1.120× geomean IPC speedup in the same frozen comparison.
+
+The final classification is **A — Aliasing hypothesis falsified** and the research decision is:
+
+```text
+RESEARCH_DECISION = STOP
+```
+
+No delta variant or further hardware work is justified by this evidence. The complete data-derived report, CSV artifacts, per-trace ChampSim outputs, and plots are in [`results/set_associative_wam/`](results/set_associative_wam/), with the main conclusion in [`report.md`](results/set_associative_wam/report.md). The implementation is retained for reproducibility; this repository is archived and is no longer under active development.
+
 ## Motivation
 
 Conventional cache logic primarily asks whether an address is already present. WAM adds a bounded sequence context:
